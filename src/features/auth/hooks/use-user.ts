@@ -12,7 +12,7 @@ export function useUser() {
     enabled: !auth.user,
   })
 
-  if (query.data && query.data.user !== auth.user) {
+  if (query.data && !auth.user) {
     auth.setUser(query.data.user)
   }
 
