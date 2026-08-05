@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
-import { Loader2, UserPlus } from 'lucide-react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store'
 import { handleServerError } from '@/lib/handle-server-error'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -17,23 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-import { register } from '@/features/auth/api'
+import { resetPassword } from '@/features/auth/api'
 
 const formSchema = z
   .object({
-    name: z
-      .string()
-      .min(1, 'Please enter your name.')
-      .min(2, 'Name must be at least 2 characters long.'),
-    email: z.email({
-      error: (iss) =>
-        iss.input === '' ? 'Please enter your email.' : undefined,
-    }),
     password: z
       .string()
-      .min(1, 'Please enter your password.')
+      .min(1, 'Please enter a new password.')
       .min(8, 'Password must be at least 8 characters long.'),
     confirmPassword: z.string().min(1, 'Please confirm your password.'),
   })
@@ -42,36 +32,35 @@ const formSchema = z
     path: ['confirmPassword'],
   })
 
-export function SignUpForm({
+export function ResetPasswordForm({
   className,
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
-  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { auth } = useAuthStore()
+  const { token } = useSearch({ from: '/(auth)/reset-password' })
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
+    defaultValues: { password: '', confirmPassword: '' },
   })
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    if (!token) {
+      toast.error('Invalid or expired reset link')
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      const res = await register({
-        name: data.name,
-        email: data.email,
+      const res = await resetPassword({
+        token,
         password: data.password,
+        password_confirmation: data.confirmPassword,
       })
-      auth.setUser(res.user)
       toast.success(res.message)
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/sign-in' })
     } catch (error) {
       handleServerError(error)
     } finally {
@@ -88,36 +77,10 @@ export function SignUpForm({
       >
         <FormField
           control={form.control}
-          name='name'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder='John Doe' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder='name@example.com' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>New Password</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -139,8 +102,8 @@ export function SignUpForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          {isLoading ? <Loader2 className='animate-spin' /> : <UserPlus />}
-          Create Account
+          {isLoading && <Loader2 className='animate-spin' />}
+          Reset Password
         </Button>
       </form>
     </Form>

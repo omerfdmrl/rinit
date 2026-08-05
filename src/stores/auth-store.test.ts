@@ -1,5 +1,4 @@
-import { clearCookies } from '@/test-utils/cookies'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 async function importAuthStore() {
   const { useAuthStore } = await import('./auth-store')
@@ -7,46 +6,20 @@ async function importAuthStore() {
 }
 
 const sampleUser = {
-  accountNo: 'ACC-1',
+  id: 'uuid',
+  name: 'John Doe',
   email: 'user@example.com',
-  role: ['user'],
-  exp: 1_700_000_000,
+  two_factor_enabled: false,
+  permissions: ['post:read'],
+  created_at: '2026-01-01T00:00:00Z',
+  updated_at: '2026-01-01T00:00:00Z',
 }
 
 describe('useAuthStore', () => {
-  beforeEach(() => {
-    clearCookies()
-    vi.resetModules()
-  })
-
-  it('starts with an empty access token when nothing is persisted', async () => {
+  it('starts with no user', async () => {
     const useAuthStore = await importAuthStore()
 
-    expect(useAuthStore.getState().auth.accessToken).toBe('')
     expect(useAuthStore.getState().auth.user).toBeNull()
-  })
-
-  it('persists access token so a new store instance reads it back', async () => {
-    const useAuthStore = await importAuthStore()
-    useAuthStore.getState().auth.setAccessToken('session-token')
-
-    vi.resetModules()
-    const useAuthStoreAfterReload = await importAuthStore()
-
-    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe(
-      'session-token'
-    )
-  })
-
-  it('clears persisted access token when resetAccessToken is used', async () => {
-    const useAuthStore = await importAuthStore()
-    useAuthStore.getState().auth.setAccessToken('to-clear')
-    useAuthStore.getState().auth.resetAccessToken()
-
-    vi.resetModules()
-    const useAuthStoreAfterReload = await importAuthStore()
-
-    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('')
   })
 
   it('updates the signed-in user via setUser', async () => {
@@ -57,20 +30,21 @@ describe('useAuthStore', () => {
     expect(useAuthStore.getState().auth.user).toEqual(sampleUser)
   })
 
-  it('reset clears user and access token and drops persistence', async () => {
+  it('reset clears the user', async () => {
     const useAuthStore = await importAuthStore()
-    useAuthStore.getState().auth.setAccessToken('will-be-cleared')
     useAuthStore.getState().auth.setUser({ ...sampleUser })
 
     useAuthStore.getState().auth.reset()
 
     expect(useAuthStore.getState().auth.user).toBeNull()
-    expect(useAuthStore.getState().auth.accessToken).toBe('')
+  })
 
-    vi.resetModules()
-    const useAuthStoreAfterReload = await importAuthStore()
+  it('clears the user with setUser(null)', async () => {
+    const useAuthStore = await importAuthStore()
+    useAuthStore.getState().auth.setUser({ ...sampleUser })
 
-    expect(useAuthStoreAfterReload.getState().auth.user).toBeNull()
-    expect(useAuthStoreAfterReload.getState().auth.accessToken).toBe('')
+    useAuthStore.getState().auth.setUser(null)
+
+    expect(useAuthStore.getState().auth.user).toBeNull()
   })
 })

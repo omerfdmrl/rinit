@@ -3,7 +3,9 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store'
+import { handleServerError } from '@/lib/handle-server-error'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +22,7 @@ import {
   InputOTPSlot,
   InputOTPSeparator,
 } from '@/components/ui/input-otp'
+import { verify2fa } from '@/features/auth/api'
 
 const formSchema = z.object({
   otp: z
@@ -32,6 +35,7 @@ type OtpFormProps = React.HTMLAttributes<HTMLFormElement>
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
   const navigate = useNavigate()
+  const { auth } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,14 +46,19 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const otp = form.watch('otp')
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    showSubmittedData(data)
 
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      const res = await verify2fa({ code: data.otp })
+      auth.setUser(res.user)
+      toast.success(res.message)
       navigate({ to: '/' })
-    }, 1000)
+    } catch (error) {
+      handleServerError(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
