@@ -85,7 +85,7 @@ export function NavUser({ user }: NavUserProps) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to='/settings'>
+                  <Link to='/teams/plans'>
                     <CreditCard />
                     Billing
                   </Link>
