@@ -13,12 +13,14 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import { sidebarData } from './layout/data/sidebar-data'
+import { filterNavItems, useNavVisibility } from './layout/nav-visibility'
 import { ScrollArea } from './ui/scroll-area'
 
 export function CommandMenu() {
   const navigate = useNavigate()
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
+  const navVisibility = useNavVisibility()
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
@@ -34,42 +36,47 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type='hover' className='h-72 pe-1'>
           <CommandEmpty>No results found.</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
-            <CommandGroup key={group.title} heading={group.title}>
-              {group.items.map((navItem, i) => {
-                if (navItem.url)
-                  return (
+          {sidebarData.navGroups.map((group) => {
+            const visibleItems = filterNavItems(group.items, navVisibility)
+            if (visibleItems.length === 0) return null
+
+            return (
+              <CommandGroup key={group.title} heading={group.title}>
+                {visibleItems.map((navItem, i) => {
+                  if (navItem.url)
+                    return (
+                      <CommandItem
+                        key={`${navItem.url}-${i}`}
+                        value={navItem.title}
+                        onSelect={() => {
+                          runCommand(() => navigate({ to: navItem.url }))
+                        }}
+                      >
+                        <div className='flex size-4 items-center justify-center'>
+                          <ArrowRight className='size-2 text-muted-foreground/80' />
+                        </div>
+                        {navItem.title}
+                      </CommandItem>
+                    )
+
+                  return navItem.items?.map((subItem, i) => (
                     <CommandItem
-                      key={`${navItem.url}-${i}`}
-                      value={navItem.title}
+                      key={`${navItem.title}-${subItem.url}-${i}`}
+                      value={`${navItem.title}-${subItem.url}`}
                       onSelect={() => {
-                        runCommand(() => navigate({ to: navItem.url }))
+                        runCommand(() => navigate({ to: subItem.url }))
                       }}
                     >
                       <div className='flex size-4 items-center justify-center'>
                         <ArrowRight className='size-2 text-muted-foreground/80' />
                       </div>
-                      {navItem.title}
+                      {navItem.title} <ChevronRight /> {subItem.title}
                     </CommandItem>
-                  )
-
-                return navItem.items?.map((subItem, i) => (
-                  <CommandItem
-                    key={`${navItem.title}-${subItem.url}-${i}`}
-                    value={`${navItem.title}-${subItem.url}`}
-                    onSelect={() => {
-                      runCommand(() => navigate({ to: subItem.url }))
-                    }}
-                  >
-                    <div className='flex size-4 items-center justify-center'>
-                      <ArrowRight className='size-2 text-muted-foreground/80' />
-                    </div>
-                    {navItem.title} <ChevronRight /> {subItem.title}
-                  </CommandItem>
-                ))
-              })}
-            </CommandGroup>
-          ))}
+                  ))
+                })}
+              </CommandGroup>
+            )
+          })}
           <CommandSeparator />
           <CommandGroup heading='Theme'>
             <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>

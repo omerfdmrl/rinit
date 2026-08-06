@@ -2,9 +2,11 @@ import {
   LayoutDashboard,
   ListTodo,
   Package,
+  Shield,
   Users,
   MessagesSquare,
 } from 'lucide-react'
+import { adminUserPermissions } from '@/features/users/hooks/use-admin-permissions'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -37,6 +39,17 @@ export const sidebarData: SidebarData = {
           title: 'Users',
           url: '/users',
           icon: Users,
+        },
+      ],
+    },
+    {
+      title: 'Admin',
+      items: [
+        {
+          title: 'Users',
+          url: '/admin/users',
+          icon: Shield,
+          permission: adminUserPermissions.list,
         },
       ],
     },

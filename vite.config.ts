@@ -28,6 +28,15 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    watch: {
+      ignored: [
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+        '**/.github/**',
+        '**/.vscode/**',
+      ],
+    },
   },
   test: {
     silent: 'passed-only',

@@ -4,6 +4,8 @@ type BaseNavItem = {
   title: string
   badge?: string
   icon?: React.ElementType
+  /** RBAC permission key required to see this nav item. Hidden when missing. */
+  permission?: string
 }
 
 type NavLink = BaseNavItem & {
