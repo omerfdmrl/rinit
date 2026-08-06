@@ -38,6 +38,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
+import { Route as AuthenticatedAdminRolesIndexRouteImport } from './routes/_authenticated/admin/roles/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -191,6 +192,12 @@ const AuthenticatedAdminUsersIndexRoute =
     path: '/admin/users/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminRolesIndexRoute =
+  AuthenticatedAdminRolesIndexRouteImport.update({
+    id: '/admin/roles/',
+    path: '/admin/roles/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/tasks/': typeof AuthenticatedTasksIndexRoute
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -247,6 +255,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/admin/roles': typeof AuthenticatedAdminRolesIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -279,6 +288,7 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/tasks/'
     | '/teams/'
     | '/users/'
+    | '/admin/roles/'
     | '/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/teams'
     | '/users'
+    | '/admin/roles'
     | '/admin/users'
   id:
     | '__root__'
@@ -369,6 +381,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/teams/'
     | '/_authenticated/users/'
+    | '/_authenticated/admin/roles/'
     | '/_authenticated/admin/users/'
   fileRoutesById: FileRoutesById
 }
@@ -587,6 +600,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/roles/': {
+      id: '/_authenticated/admin/roles/'
+      path: '/admin/roles'
+      fullPath: '/admin/roles/'
+      preLoaderRoute: typeof AuthenticatedAdminRolesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -646,6 +666,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedAdminRolesIndexRoute: typeof AuthenticatedAdminRolesIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
 }
 
@@ -660,6 +681,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedAdminRolesIndexRoute: AuthenticatedAdminRolesIndexRoute,
   AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
 }
 

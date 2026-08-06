@@ -3,9 +3,11 @@ import {
   ListTodo,
   Package,
   Shield,
+  ShieldCheck,
   Users,
   MessagesSquare,
 } from 'lucide-react'
+import { adminRolePermissions } from '@/features/roles/hooks/use-admin-permissions'
 import { adminUserPermissions } from '@/features/users/hooks/use-admin-permissions'
 import { type SidebarData } from '../types'
 
@@ -50,6 +52,12 @@ export const sidebarData: SidebarData = {
           url: '/admin/users',
           icon: Shield,
           permission: adminUserPermissions.list,
+        },
+        {
+          title: 'Roles',
+          url: '/admin/roles',
+          icon: ShieldCheck,
+          permission: adminRolePermissions.list,
         },
       ],
     },
