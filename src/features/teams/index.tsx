@@ -7,10 +7,18 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { TeamMembers } from './components/team-members'
 import { TeamRoles } from './components/team-roles'
 import { TeamSettings } from './components/team-settings'
+import { useTeamUserPermissions } from './hooks/use-team-user-permissions'
 import { useCurrentTeam } from './hooks/use-teams'
 
 export function Teams() {
   const { currentTeam } = useCurrentTeam()
+  const { canListMembers, canListRoles } = useTeamUserPermissions()
+
+  const defaultTab = canListMembers
+    ? 'members'
+    : canListRoles
+      ? 'roles'
+      : 'settings'
 
   return (
     <>
@@ -30,18 +38,24 @@ export function Teams() {
           </p>
         </div>
 
-        <Tabs defaultValue='members' className='w-full'>
+        <Tabs defaultValue={defaultTab} className='w-full'>
           <TabsList>
-            <TabsTrigger value='members'>Members</TabsTrigger>
-            <TabsTrigger value='roles'>Roles</TabsTrigger>
+            {canListMembers && (
+              <TabsTrigger value='members'>Members</TabsTrigger>
+            )}
+            {canListRoles && <TabsTrigger value='roles'>Roles</TabsTrigger>}
             <TabsTrigger value='settings'>Settings</TabsTrigger>
           </TabsList>
-          <TabsContent value='members' className='mt-4'>
-            <TeamMembers />
-          </TabsContent>
-          <TabsContent value='roles' className='mt-4'>
-            <TeamRoles />
-          </TabsContent>
+          {canListMembers && (
+            <TabsContent value='members' className='mt-4'>
+              <TeamMembers />
+            </TabsContent>
+          )}
+          {canListRoles && (
+            <TabsContent value='roles' className='mt-4'>
+              <TeamRoles />
+            </TabsContent>
+          )}
           <TabsContent value='settings' className='mt-4'>
             <TeamSettings />
           </TabsContent>

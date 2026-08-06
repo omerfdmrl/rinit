@@ -19,6 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import type { TeamMember } from '../api'
+import { useTeamUserPermissions } from '../hooks/use-team-user-permissions'
 import { useCurrentTeam, useTeamMembers } from '../hooks/use-teams'
 import { AssignRoleDialog } from './assign-role-dialog'
 import { InviteMemberDialog } from './invite-member-dialog'
@@ -42,6 +43,8 @@ function formatDate(dateString: string): string {
 
 export function TeamMembers() {
   const { currentTeam } = useCurrentTeam()
+  const { canInviteMember, canAssignRole, canRemoveMember } =
+    useTeamUserPermissions()
   const [inviteOpen, setInviteOpen] = React.useState(false)
   const [removeMember, setRemoveMember] = React.useState<TeamMember | null>(
     null
@@ -69,10 +72,12 @@ export function TeamMembers() {
               Manage roles and access for your workspace.
             </p>
           </div>
-          <Button size='sm' onClick={() => setInviteOpen(true)}>
-            <UserPlus className='size-4' />
-            Invite
-          </Button>
+          {canInviteMember && (
+            <Button size='sm' onClick={() => setInviteOpen(true)}>
+              <UserPlus className='size-4' />
+              Invite
+            </Button>
+          )}
         </div>
 
         <Table>
@@ -131,35 +136,42 @@ export function TeamMembers() {
                     {formatDate(member.created_at)}
                   </TableCell>
                   <TableCell>
-                    {member.role !== 'owner' && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            className='size-8'
-                          >
-                            <MoreHorizontal className='size-4' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align='end'>
-                          <DropdownMenuItem
-                            onClick={() => setAssignRole(member)}
-                          >
-                            <ShieldCheck className='size-4' />
-                            Change role
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className='text-destructive'
-                            onClick={() => setRemoveMember(member)}
-                          >
-                            <UserMinus className='size-4' />
-                            Remove
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
+                    {member.role !== 'owner' &&
+                      (canAssignRole || canRemoveMember) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              className='size-8'
+                            >
+                              <MoreHorizontal className='size-4' />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align='end'>
+                            {canAssignRole && (
+                              <DropdownMenuItem
+                                onClick={() => setAssignRole(member)}
+                              >
+                                <ShieldCheck className='size-4' />
+                                Change role
+                              </DropdownMenuItem>
+                            )}
+                            {canAssignRole && canRemoveMember && (
+                              <DropdownMenuSeparator />
+                            )}
+                            {canRemoveMember && (
+                              <DropdownMenuItem
+                                className='text-destructive'
+                                onClick={() => setRemoveMember(member)}
+                              >
+                                <UserMinus className='size-4' />
+                                Remove
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                   </TableCell>
                 </TableRow>
               ))

@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import type { TeamRoleWithPermissions, Permission } from '../api'
+import { useTeamUserPermissions } from '../hooks/use-team-user-permissions'
 import {
   useCurrentTeam,
   useTeamRoles,
@@ -50,6 +51,8 @@ function formatGroupName(name: string): string {
 
 export function TeamRoles() {
   const { currentTeam } = useCurrentTeam()
+  const { canCreateRole, canUpdateRole, canDeleteRole } =
+    useTeamUserPermissions()
   const [createOpen, setCreateOpen] = React.useState(false)
   const [editRole, setEditRole] =
     React.useState<TeamRoleWithPermissions | null>(null)
@@ -122,10 +125,12 @@ export function TeamRoles() {
               Manage role permissions across resources.
             </p>
           </div>
-          <Button size='sm' onClick={() => setCreateOpen(true)}>
-            <Plus className='size-4' />
-            Add Role
-          </Button>
+          {canCreateRole && (
+            <Button size='sm' onClick={() => setCreateOpen(true)}>
+              <Plus className='size-4' />
+              Add Role
+            </Button>
+          )}
         </div>
 
         <div className='overflow-x-auto'>
@@ -217,7 +222,8 @@ export function TeamRoles() {
                                           checked={isChecked}
                                           disabled={
                                             roleWithPerms.role.is_default ||
-                                            updateMutation.isPending
+                                            updateMutation.isPending ||
+                                            !canUpdateRole
                                           }
                                           onCheckedChange={() =>
                                             togglePermission(
@@ -244,15 +250,17 @@ export function TeamRoles() {
                     )}
                     <TableCell>
                       <div className='flex items-center gap-1'>
-                        <Button
-                          variant='ghost'
-                          size='icon'
-                          className='size-8'
-                          onClick={() => setEditRole(roleWithPerms)}
-                        >
-                          <Pencil className='size-4' />
-                        </Button>
-                        {!roleWithPerms.role.is_default && (
+                        {canUpdateRole && (
+                          <Button
+                            variant='ghost'
+                            size='icon'
+                            className='size-8'
+                            onClick={() => setEditRole(roleWithPerms)}
+                          >
+                            <Pencil className='size-4' />
+                          </Button>
+                        )}
+                        {!roleWithPerms.role.is_default && canDeleteRole && (
                           <Button
                             variant='ghost'
                             size='icon'
