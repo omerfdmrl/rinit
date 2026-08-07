@@ -139,7 +139,7 @@ export function PlanOverview() {
                 Negative limit
               </span>
               <span className='text-sm'>
-                {formatCents(subscription.negative_balance_limit)}
+                {formatCents(subscription.negative_balance_limit ?? 0)}
               </span>
             </div>
             <div className='flex items-center justify-between'>

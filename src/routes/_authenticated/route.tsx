@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useAuthStore } from '@/stores/auth-store'
 import { AuthenticatedLayout } from '@/components/layout/authenticated-layout'
 import { getMe, meQueryKey } from '@/features/auth/api'
-import { useAuthStore } from '@/stores/auth-store'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async ({ context, location }) => {
@@ -12,12 +12,13 @@ export const Route = createFileRoute('/_authenticated')({
     }
 
     try {
-      await context.queryClient.fetchQuery({
+      const result = await context.queryClient.fetchQuery({
         queryKey: meQueryKey,
         queryFn: getMe,
         retry: false,
-        staleTime: 0,
+        staleTime: 5 * 60 * 1000,
       })
+      useAuthStore.getState().auth.setUser(result.user)
     } catch {
       throw redirect({
         to: '/sign-in',

@@ -24,7 +24,8 @@ import { CreateTeamDialog } from './create-team-dialog'
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
-  const teamsQuery = useTeams()
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const teamsQuery = useTeams(menuOpen)
   const { currentTeam } = useCurrentTeam()
   const switchTeamMutation = useSwitchTeam()
 
@@ -34,7 +35,7 @@ export function TeamSwitcher() {
     <>
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu>
+          <DropdownMenu onOpenChange={setMenuOpen}>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size='lg'

@@ -139,7 +139,7 @@ function LimitForm({
   onSubmit: (limit: number | null) => void
 }) {
   const initialLimit =
-    subscription.negative_balance_limit === 0
+    subscription.negative_balance_limit == null
       ? ''
       : String(subscription.negative_balance_limit)
   const [limitValue, setLimitValue] = React.useState(initialLimit)

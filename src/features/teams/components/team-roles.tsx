@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Loader2, Pencil, Plus, Save, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -58,6 +59,7 @@ export function TeamRoles() {
     React.useState<TeamRoleWithPermissions | null>(null)
   const [deleteRole, setDeleteRole] =
     React.useState<TeamRoleWithPermissions | null>(null)
+  const [drafts, setDrafts] = React.useState<Record<string, string[]>>({})
 
   const rolesQuery = useTeamRoles(currentTeam?.id ?? '')
   const updateMutation = useUpdateTeamRole(currentTeam?.id ?? '')
@@ -83,25 +85,42 @@ export function TeamRoles() {
     [allPermissions]
   )
 
-  const togglePermission = (
-    roleWithPerms: TeamRoleWithPermissions,
-    permissionKey: string
-  ) => {
-    if (!currentTeam || roleWithPerms.role.is_default) return
+  const serverKeysOf = (roleId: string) =>
+    roles
+      .find((r) => r.role.id === roleId)
+      ?.permissions.map((p) => p.permission_key) ?? []
 
-    const currentKeys = roleWithPerms.permissions.map((p) => p.permission_key)
-    const newKeys = currentKeys.includes(permissionKey)
-      ? currentKeys.filter((k) => k !== permissionKey)
-      : [...currentKeys, permissionKey]
+  const togglePermission = (roleId: string, permissionKey: string) => {
+    setDrafts((prev) => {
+      const current = prev[roleId] ?? serverKeysOf(roleId)
+      const next = current.includes(permissionKey)
+        ? current.filter((k) => k !== permissionKey)
+        : [...current, permissionKey]
+      return { ...prev, [roleId]: next }
+    })
+  }
+
+  const handleSavePermissions = (roleWithPerms: TeamRoleWithPermissions) => {
+    const roleId = roleWithPerms.role.id
+    const keys = drafts[roleId]
+    if (!keys) return
 
     updateMutation.mutate(
       {
-        roleId: roleWithPerms.role.id,
-        body: { permission_keys: newKeys },
+        roleId,
+        body: { permission_keys: keys },
       },
       {
         onSuccess: () => {
           toast.success('Permissions updated')
+          setDrafts((prev) => {
+            const next = { ...prev }
+            delete next[roleId]
+            return next
+          })
+        },
+        onError: (error: Error) => {
+          handleServerError(error)
         },
       }
     )
@@ -188,92 +207,122 @@ export function TeamRoles() {
                   </TableCell>
                 </TableRow>
               ) : (
-                roles.map((roleWithPerms) => (
-                  <TableRow key={roleWithPerms.role.id}>
-                    <TableCell>
-                      <div className='flex items-center gap-2'>
-                        <span className='font-medium'>
-                          {roleWithPerms.role.role_name}
-                        </span>
-                        {roleWithPerms.role.is_default && (
-                          <Badge variant='outline' className='text-xs'>
-                            {roleWithPerms.role.is_default ? 'default' : ''}
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    {Array.from(permissionGroups.entries()).map(
-                      ([group, perms]) => (
-                        <React.Fragment key={group}>
-                          {perms.map((perm) => {
-                            const isChecked = roleWithPerms.permissions.some(
-                              (p) => p.permission_key === perm.permission_key
-                            )
-                            return (
-                              <TableCell
-                                key={perm.id}
-                                className='border-l text-center'
+                roles.map((roleWithPerms) => {
+                  const roleId = roleWithPerms.role.id
+                  const serverKeys = roleWithPerms.permissions.map(
+                    (p) => p.permission_key
+                  )
+                  const draftKeys = drafts[roleId] ?? serverKeys
+                  const hasChanges =
+                    !!drafts[roleId] &&
+                    (draftKeys.length !== serverKeys.length ||
+                      draftKeys.some((k) => !serverKeys.includes(k)))
+
+                  return (
+                    <TableRow key={roleWithPerms.role.id}>
+                      <TableCell>
+                        <div className='flex items-center gap-2'>
+                          <span className='font-medium'>
+                            {roleWithPerms.role.role_name}
+                          </span>
+                          {roleWithPerms.role.is_default && (
+                            <Badge variant='outline' className='text-xs'>
+                              {roleWithPerms.role.is_default ? 'default' : ''}
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      {Array.from(permissionGroups.entries()).map(
+                        ([group, perms]) => (
+                          <React.Fragment key={group}>
+                            {perms.map((perm) => {
+                              const isChecked = draftKeys.includes(
+                                perm.permission_key
+                              )
+                              return (
+                                <TableCell
+                                  key={perm.id}
+                                  className='border-l text-center'
+                                >
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <div className='flex justify-center'>
+                                          <Checkbox
+                                            checked={isChecked}
+                                            disabled={
+                                              roleWithPerms.role.is_default ||
+                                              updateMutation.isPending ||
+                                              !canUpdateRole
+                                            }
+                                            onCheckedChange={() =>
+                                              togglePermission(
+                                                roleId,
+                                                perm.permission_key
+                                              )
+                                            }
+                                          />
+                                        </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>{perm.description}</p>
+                                        <p className='font-mono text-xs text-muted-foreground'>
+                                          {perm.permission_key}
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </TableCell>
+                              )
+                            })}
+                          </React.Fragment>
+                        )
+                      )}
+                      <TableCell>
+                        <div className='flex items-center gap-1'>
+                          {hasChanges ? (
+                            <Button
+                              variant='default'
+                              size='icon'
+                              className='size-8'
+                              onClick={() =>
+                                handleSavePermissions(roleWithPerms)
+                              }
+                              disabled={updateMutation.isPending}
+                            >
+                              {updateMutation.isPending ? (
+                                <Loader2 className='size-4 animate-spin' />
+                              ) : (
+                                <Save className='size-4' />
+                              )}
+                            </Button>
+                          ) : (
+                            canUpdateRole && (
+                              <Button
+                                variant='ghost'
+                                size='icon'
+                                className='size-8'
+                                onClick={() => setEditRole(roleWithPerms)}
                               >
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className='flex justify-center'>
-                                        <Checkbox
-                                          checked={isChecked}
-                                          disabled={
-                                            roleWithPerms.role.is_default ||
-                                            updateMutation.isPending ||
-                                            !canUpdateRole
-                                          }
-                                          onCheckedChange={() =>
-                                            togglePermission(
-                                              roleWithPerms,
-                                              perm.permission_key
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>{perm.description}</p>
-                                      <p className='font-mono text-xs text-muted-foreground'>
-                                        {perm.permission_key}
-                                      </p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </TableCell>
+                                <Pencil className='size-4' />
+                              </Button>
                             )
-                          })}
-                        </React.Fragment>
-                      )
-                    )}
-                    <TableCell>
-                      <div className='flex items-center gap-1'>
-                        {canUpdateRole && (
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            className='size-8'
-                            onClick={() => setEditRole(roleWithPerms)}
-                          >
-                            <Pencil className='size-4' />
-                          </Button>
-                        )}
-                        {!roleWithPerms.role.is_default && canDeleteRole && (
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            className='size-8 text-destructive'
-                            onClick={() => setDeleteRole(roleWithPerms)}
-                          >
-                            <Trash2 className='size-4' />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                          )}
+                          {!roleWithPerms.role.is_default && canDeleteRole && (
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              className='size-8 text-destructive'
+                              onClick={() => setDeleteRole(roleWithPerms)}
+                            >
+                              <Trash2 className='size-4' />
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
               )}
             </TableBody>
           </Table>

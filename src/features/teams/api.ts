@@ -283,7 +283,7 @@ export type Subscription = {
   renewed_at: string | null
   cancelled_at: string | null
   credit_balance: number
-  negative_balance_limit: number
+  negative_balance_limit: number | null
   auto_recharge_enabled: boolean
   auto_recharge_min_balance: number
   auto_recharge_amount: number
@@ -414,7 +414,10 @@ export async function getPlanUsage(
 export async function getInvoices(
   teamId: string,
   params?: { page?: number; per_page?: number; status?: string }
-): Promise<{ invoices: Invoice[]; pagination: PaginatedResponse<Invoice>['pagination'] }> {
+): Promise<{
+  invoices: Invoice[]
+  pagination: PaginatedResponse<Invoice>['pagination']
+}> {
   const { data } = await http.get(`/teams/${teamId}/plans/invoices`, { params })
   return data
 }
@@ -422,7 +425,10 @@ export async function getInvoices(
 export async function getLedger(
   teamId: string,
   params?: { page?: number; per_page?: number; entry_type?: string }
-): Promise<{ ledger: LedgerEntry[]; pagination: PaginatedResponse<LedgerEntry>['pagination'] }> {
+): Promise<{
+  ledger: LedgerEntry[]
+  pagination: PaginatedResponse<LedgerEntry>['pagination']
+}> {
   const { data } = await http.get(`/teams/${teamId}/plans/ledger`, { params })
   return data
 }

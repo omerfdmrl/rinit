@@ -37,7 +37,9 @@ export function AttachAddonDialog({
   const [selectedAddonId, setSelectedAddonId] = React.useState<string>('')
   const [quantity, setQuantity] = React.useState(1)
 
-  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '')
+  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '', {
+    enabled: open,
+  })
   const attachMutation = useAttachAddon(currentTeam?.id ?? '')
   const isPending = attachMutation.isPending
 

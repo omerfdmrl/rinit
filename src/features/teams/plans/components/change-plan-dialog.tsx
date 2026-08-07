@@ -35,8 +35,12 @@ export function ChangePlanDialog({
     null
   )
 
-  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '')
-  const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
+  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '', {
+    enabled: open,
+  })
+  const subscriptionQuery = useSubscription(currentTeam?.id ?? '', {
+    enabled: open,
+  })
   const changeMutation = useChangePlan(currentTeam?.id ?? '')
 
   const plans = catalogQuery.data?.plans ?? []

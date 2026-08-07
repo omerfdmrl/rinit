@@ -1,24 +1,27 @@
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/stores/auth-store'
 import { getMe, meQueryKey } from '../api'
 
 export function useUser() {
-  const { auth } = useAuthStore()
+  const user = useAuthStore((state) => state.auth.user)
   const query = useQuery({
     queryKey: meQueryKey,
     queryFn: getMe,
     retry: false,
-    staleTime: 0,
-    enabled: !auth.user,
+    staleTime: 5 * 60 * 1000,
+    enabled: !user,
   })
 
-  if (query.data && !auth.user) {
-    auth.setUser(query.data.user)
-  }
+  useEffect(() => {
+    if (query.data && !user) {
+      useAuthStore.getState().auth.setUser(query.data.user)
+    }
+  }, [query.data, user])
 
   return {
-    user: auth.user,
-    isAuthenticated: !!auth.user,
+    user,
+    isAuthenticated: !!user,
     isLoading: query.isLoading,
     isPending: query.isPending,
     refetch: query.refetch,
