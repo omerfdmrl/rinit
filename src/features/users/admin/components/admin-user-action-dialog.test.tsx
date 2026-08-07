@@ -8,7 +8,6 @@ const MOCK_USER: AdminUser = {
   id: 'alex_uuid',
   name: 'Alex Smith',
   email: 'alex@smith.com',
-  role: 'user',
   two_factor_enabled: false,
   created_at: '2026-01-01T10:30:00Z',
   updated_at: '2026-02-02T10:30:00Z',
@@ -85,16 +84,12 @@ describe('AdminUserActionDialog', () => {
       await userEvent.fill(screen.getByLabelText(/^Name$/i), MOCK_USER.name)
       await userEvent.fill(screen.getByLabelText(/^Email$/i), MOCK_USER.email)
 
-      const roleSelect = screen.getByRole('combobox', { name: /Role/i })
-      await userEvent.click(roleSelect)
-      await userEvent.click(screen.getByRole('option', { name: 'Admin' }))
-
       const submitButton = screen.getByRole('button', { name: /Save Changes/i })
       await userEvent.click(submitButton)
 
       expect(createAdminUserMock).toHaveBeenCalledOnce()
       expect(createAdminUserMock).toHaveBeenCalledWith(
-        { name: MOCK_USER.name, email: MOCK_USER.email, role: 'admin' },
+        { name: MOCK_USER.name, email: MOCK_USER.email },
         expect.objectContaining({ onSuccess: expect.any(Function) })
       )
       expect(toastSuccess).toHaveBeenCalledWith(
@@ -157,7 +152,7 @@ describe('AdminUserActionDialog', () => {
       expect(updateAdminUserMock).toHaveBeenCalledWith(
         {
           userId: MOCK_USER.id,
-          body: { name: 'John Smith', email: MOCK_USER.email, role: 'user' },
+          body: { name: 'John Smith', email: MOCK_USER.email },
         },
         expect.objectContaining({ onSuccess: expect.any(Function) })
       )

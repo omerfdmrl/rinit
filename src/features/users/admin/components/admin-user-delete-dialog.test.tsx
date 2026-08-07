@@ -8,7 +8,6 @@ const MOCK_USER: AdminUser = {
   id: 'user-delete-test',
   name: 'John Doe',
   email: 'johndoe@shadcn-admin.com',
-  role: 'admin',
   two_factor_enabled: false,
   created_at: '2026-01-01T10:30:00Z',
   updated_at: '2026-02-02T10:30:00Z',

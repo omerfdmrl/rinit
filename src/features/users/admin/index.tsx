@@ -28,7 +28,7 @@ export function AdminUsers() {
               User Management
             </h2>
             <p className='text-muted-foreground'>
-              Manage users, roles, and their access here.
+              Manage users and their access here.
             </p>
           </div>
           <AdminUsersPrimaryButtons />

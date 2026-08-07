@@ -22,7 +22,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { SelectDropdown } from '@/components/select-dropdown'
 import { type AdminUser } from '../../api'
 import {
   useCreateAdminUser,
@@ -34,14 +33,8 @@ const formSchema = z.object({
   email: z.email({
     error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
   }),
-  role: z.union([z.literal('user'), z.literal('admin')]),
 })
 type UserForm = z.infer<typeof formSchema>
-
-const roles = [
-  { label: 'User', value: 'user' },
-  { label: 'Admin', value: 'admin' },
-] as const
 
 type AdminUserActionDialogProps = {
   currentRow?: AdminUser
@@ -61,9 +54,8 @@ export function AdminUserActionDialog({
       ? {
           name: currentRow.name,
           email: currentRow.email,
-          role: currentRow.role,
         }
-      : { name: '', email: '', role: 'user' },
+      : { name: '', email: '' },
   })
   const createMutation = useCreateAdminUser()
   const updateMutation = useUpdateAdminUser()
@@ -151,27 +143,6 @@ export function AdminUserActionDialog({
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className='col-span-4 col-start-3' />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='role'
-              render={({ field }) => (
-                <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                  <FormLabel className='col-span-2 text-end'>Role</FormLabel>
-                  <SelectDropdown
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    placeholder='Select a role'
-                    className='col-span-4'
-                    disabled={isPending}
-                    items={roles.map(({ label, value }) => ({
-                      label,
-                      value,
-                    }))}
-                  />
                   <FormMessage className='col-span-4 col-start-3' />
                 </FormItem>
               )}

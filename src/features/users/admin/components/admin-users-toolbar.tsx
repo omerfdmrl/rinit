@@ -37,16 +37,6 @@ export function AdminUsersToolbar<TData>({
           className='h-8 w-37.5 lg:w-62.5'
         />
         <div className='flex gap-x-2'>
-          {table.getColumn('role') && (
-            <DataTableFacetedFilter
-              column={table.getColumn('role')}
-              title='Role'
-              options={[
-                { label: 'User', value: 'user' },
-                { label: 'Admin', value: 'admin' },
-              ]}
-            />
-          )}
           {table.getColumn('two_factor') && (
             <DataTableFacetedFilter
               column={table.getColumn('two_factor')}

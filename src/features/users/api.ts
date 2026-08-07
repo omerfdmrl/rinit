@@ -2,13 +2,10 @@ import { http } from '@/lib/http'
 
 export const adminUsersQueryKey = ['admin', 'users'] as const
 
-export type AdminUserRole = 'user' | 'admin'
-
 export type AdminUser = {
   id: string
   name: string
   email: string
-  role: AdminUserRole
   two_factor_enabled: boolean
   created_at: string
   updated_at: string
@@ -32,7 +29,6 @@ export type AdminUsersListParams = {
   sort_by?: string
   sort_order?: 'asc' | 'desc'
   search?: string
-  role?: string
   two_factor?: string
 }
 
@@ -48,7 +44,6 @@ export async function getAdminUsers(
 export type AdminUserCreateBody = {
   name: string
   email: string
-  role: AdminUserRole
 }
 
 export async function createAdminUser(

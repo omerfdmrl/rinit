@@ -53,21 +53,6 @@ export function AdminUsersTable({ search, navigate }: DataTableProps) {
     columnFilters: [
       { columnId: 'search', searchKey: 'search', type: 'string' },
       {
-        columnId: 'role',
-        searchKey: 'role',
-        type: 'array',
-        serialize: (value) => {
-          const values = value as string[]
-          if (values.length === 1) return values[0]
-          return `in:${values.join(',')}`
-        },
-        deserialize: (value) => {
-          if (typeof value !== 'string' || value === '') return []
-          if (value.startsWith('in:')) return value.slice(3).split(',')
-          return [value]
-        },
-      },
-      {
         columnId: 'two_factor',
         searchKey: 'two_factor',
         type: 'array',
@@ -104,8 +89,6 @@ export function AdminUsersTable({ search, navigate }: DataTableProps) {
     (columnFilters.find((filter) => filter.id === 'search')?.value as
       | string
       | undefined) ?? ''
-  const roleFilter = columnFilters.find((filter) => filter.id === 'role')
-    ?.value as string[] | undefined
   const twoFactorFilter = columnFilters.find(
     (filter) => filter.id === 'two_factor'
   )?.value as string[] | undefined
@@ -114,12 +97,6 @@ export function AdminUsersTable({ search, navigate }: DataTableProps) {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
     search: searchValue || undefined,
-    role:
-      roleFilter && roleFilter.length > 0
-        ? roleFilter.length === 1
-          ? roleFilter[0]
-          : `in:${roleFilter.join(',')}`
-        : undefined,
     two_factor:
       twoFactorFilter && twoFactorFilter.length > 0
         ? twoFactorFilter.length === 1

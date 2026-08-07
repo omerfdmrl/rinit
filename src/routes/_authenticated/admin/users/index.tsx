@@ -9,10 +9,6 @@ const adminUsersSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(20),
   search: z.string().optional().catch(''),
-  role: z
-    .union([z.enum(['user', 'admin']), z.string().regex(/^in:.*/)])
-    .optional()
-    .catch(''),
   two_factor: z
     .union([z.enum(['true', 'false']), z.string().regex(/^in:.*/)])
     .optional()

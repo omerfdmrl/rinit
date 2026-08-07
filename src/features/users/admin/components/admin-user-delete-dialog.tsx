@@ -65,11 +65,8 @@ export function AdminUserDeleteDialog({
             Are you sure you want to delete{' '}
             <span className='font-bold'>{currentRow.name}</span>?
             <br />
-            This action will permanently remove the user with the role of{' '}
-            <span className='font-bold'>
-              {currentRow.role.toUpperCase()}
-            </span>{' '}
-            from the system. This cannot be undone.
+            This action will permanently remove the user from the system. This
+            cannot be undone.
           </p>
 
           <Label className='my-2'>

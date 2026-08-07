@@ -1,6 +1,5 @@
 import { format } from 'date-fns'
 import { type ColumnDef } from '@tanstack/react-table'
-import { ShieldCheck, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -8,11 +7,6 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { type AdminUser } from '../../api'
 import { AdminUserRowActions } from './admin-user-row-actions'
-
-const roleIcons = {
-  user: User,
-  admin: ShieldCheck,
-} as const
 
 export const adminUsersColumns: ColumnDef<AdminUser>[] = [
   {
@@ -66,26 +60,6 @@ export const adminUsersColumns: ColumnDef<AdminUser>[] = [
     cell: ({ row }) => (
       <div className='w-fit ps-2 text-nowrap'>{row.getValue('email')}</div>
     ),
-  },
-  {
-    accessorKey: 'role',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Role' />
-    ),
-    cell: ({ row }) => {
-      const { role } = row.original
-      const Icon = roleIcons[role]
-      return (
-        <div className='flex items-center gap-x-2'>
-          <Icon size={16} className='text-muted-foreground' />
-          <Badge variant='outline' className='capitalize'>
-            {role}
-          </Badge>
-        </div>
-      )
-    },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     id: 'two_factor',
