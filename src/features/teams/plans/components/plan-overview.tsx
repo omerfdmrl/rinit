@@ -8,12 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { useSubscription } from '../../hooks/use-plans'
-import { formatCents } from '../utils'
 import type { PlanUsage } from '../../api'
-import { ChangePlanDialog } from './change-plan-dialog'
+import { usePlanPermissions } from '../../hooks/use-plan-permissions'
+import { useSubscription } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
+import { formatCents } from '../utils'
 import { CancelPlanDialog } from './cancel-plan-dialog'
+import { ChangePlanDialog } from './change-plan-dialog'
 
 const STATUS_LABELS: Record<string, string> = {
   trial: 'Trial',
@@ -26,7 +27,10 @@ const STATUS_LABELS: Record<string, string> = {
   expired: 'Expired',
 }
 
-const STATUS_VARIANTS: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const STATUS_VARIANTS: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   active: 'default',
   trial: 'secondary',
   grace_period: 'destructive',
@@ -47,6 +51,7 @@ function formatDate(dateString: string): string {
 
 export function PlanOverview() {
   const { currentTeam } = useCurrentTeam()
+  const { canChange } = usePlanPermissions()
   const [changeOpen, setChangeOpen] = React.useState(false)
   const [cancelOpen, setCancelOpen] = React.useState(false)
 
@@ -85,7 +90,9 @@ export function PlanOverview() {
           <CardContent className='space-y-2'>
             <div className='flex items-center justify-between'>
               <span className='text-sm text-muted-foreground'>Status</span>
-              <Badge variant={STATUS_VARIANTS[subscription.status] ?? 'secondary'}>
+              <Badge
+                variant={STATUS_VARIANTS[subscription.status] ?? 'secondary'}
+              >
                 {STATUS_LABELS[subscription.status] ?? subscription.status}
               </Badge>
             </div>
@@ -98,7 +105,9 @@ export function PlanOverview() {
               </span>
             </div>
             <div className='flex items-center justify-between'>
-              <span className='text-sm text-muted-foreground'>Billing period</span>
+              <span className='text-sm text-muted-foreground'>
+                Billing period
+              </span>
               <span className='text-sm'>
                 {formatDate(subscription.current_period_start)} –{' '}
                 {formatDate(subscription.current_period_end)}
@@ -106,8 +115,12 @@ export function PlanOverview() {
             </div>
             {subscription.trial_ends_at && (
               <div className='flex items-center justify-between'>
-                <span className='text-sm text-muted-foreground'>Trial ends</span>
-                <span className='text-sm'>{formatDate(subscription.trial_ends_at)}</span>
+                <span className='text-sm text-muted-foreground'>
+                  Trial ends
+                </span>
+                <span className='text-sm'>
+                  {formatDate(subscription.trial_ends_at)}
+                </span>
               </div>
             )}
           </CardContent>
@@ -122,14 +135,22 @@ export function PlanOverview() {
           </CardHeader>
           <CardContent className='space-y-2'>
             <div className='flex items-center justify-between'>
-              <span className='text-sm text-muted-foreground'>Negative limit</span>
+              <span className='text-sm text-muted-foreground'>
+                Negative limit
+              </span>
               <span className='text-sm'>
                 {formatCents(subscription.negative_balance_limit)}
               </span>
             </div>
             <div className='flex items-center justify-between'>
-              <span className='text-sm text-muted-foreground'>Auto recharge</span>
-              <Badge variant={subscription.auto_recharge_enabled ? 'default' : 'secondary'}>
+              <span className='text-sm text-muted-foreground'>
+                Auto recharge
+              </span>
+              <Badge
+                variant={
+                  subscription.auto_recharge_enabled ? 'default' : 'secondary'
+                }
+              >
                 {subscription.auto_recharge_enabled ? 'On' : 'Off'}
               </Badge>
             </div>
@@ -151,12 +172,18 @@ export function PlanOverview() {
                   </span>
                 </div>
                 <div className='flex items-center justify-between'>
-                  <span className='text-sm text-muted-foreground'>Change type</span>
-                  <Badge variant='outline'>{subscription.scheduled_change_type}</Badge>
+                  <span className='text-sm text-muted-foreground'>
+                    Change type
+                  </span>
+                  <Badge variant='outline'>
+                    {subscription.scheduled_change_type}
+                  </Badge>
                 </div>
               </>
             ) : (
-              <p className='text-sm text-muted-foreground'>No pending changes.</p>
+              <p className='text-sm text-muted-foreground'>
+                No pending changes.
+              </p>
             )}
           </CardContent>
         </Card>
@@ -190,16 +217,18 @@ export function PlanOverview() {
         </Card>
       )}
 
-      <div className='mt-6 flex gap-2'>
-        <Button onClick={() => setChangeOpen(true)}>Change Plan</Button>
-        <Button
-          variant='outline'
-          className='text-destructive'
-          onClick={() => setCancelOpen(true)}
-        >
-          Cancel Subscription
-        </Button>
-      </div>
+      {canChange && (
+        <div className='mt-6 flex gap-2'>
+          <Button onClick={() => setChangeOpen(true)}>Change Plan</Button>
+          <Button
+            variant='outline'
+            className='text-destructive'
+            onClick={() => setCancelOpen(true)}
+          >
+            Cancel Subscription
+          </Button>
+        </div>
+      )}
 
       <ChangePlanDialog open={changeOpen} onOpenChange={setChangeOpen} />
       <CancelPlanDialog open={cancelOpen} onOpenChange={setCancelOpen} />

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,11 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { handleServerError } from '@/lib/handle-server-error'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { usePlansCatalog, useAttachAddon } from '../../hooks/use-plans'
-import { formatCents } from '../utils'
 import type { Plan } from '../../api'
+import { usePlansCatalog, useAttachAddon } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
+import { formatCents } from '../utils'
 
 type AttachAddonDialogProps = {
   open: boolean
@@ -94,7 +94,8 @@ export function AttachAddonDialog({
               <SelectContent>
                 {addons.map((addon: Plan) => (
                   <SelectItem key={addon.id} value={addon.id}>
-                    {addon.name} — {formatCents(addon.price_amount, addon.currency)}
+                    {addon.name} —{' '}
+                    {formatCents(addon.price_amount, addon.currency)}
                   </SelectItem>
                 ))}
               </SelectContent>

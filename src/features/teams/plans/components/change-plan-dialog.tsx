@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,11 +12,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { handleServerError } from '@/lib/handle-server-error'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { usePlansCatalog, useSubscription, useChangePlan } from '../../hooks/use-plans'
-import { formatCents } from '../utils'
 import type { Plan } from '../../api'
+import {
+  usePlansCatalog,
+  useSubscription,
+  useChangePlan,
+} from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
+import { formatCents } from '../utils'
 
 type ChangePlanDialogProps = {
   open: boolean
@@ -27,7 +31,9 @@ export function ChangePlanDialog({
   onOpenChange,
 }: ChangePlanDialogProps) {
   const { currentTeam } = useCurrentTeam()
-  const [selectedPlanId, setSelectedPlanId] = React.useState<string | null>(null)
+  const [selectedPlanId, setSelectedPlanId] = React.useState<string | null>(
+    null
+  )
 
   const catalogQuery = usePlansCatalog(currentTeam?.id ?? '')
   const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
@@ -44,7 +50,9 @@ export function ChangePlanDialog({
     if (!currentPlanId) return 'upgrade'
     const currentPlan = plans.find((p: Plan) => p.id === currentPlanId)
     if (!currentPlan) return 'upgrade'
-    return plan.price_amount > currentPlan.price_amount ? 'upgrade' : 'downgrade'
+    return plan.price_amount > currentPlan.price_amount
+      ? 'upgrade'
+      : 'downgrade'
   }
 
   function handleConfirm() {
@@ -81,13 +89,15 @@ export function ChangePlanDialog({
         <DialogHeader>
           <DialogTitle>Change Plan</DialogTitle>
           <DialogDescription>
-            Select a new plan. The change will take effect at the end of the current
-            billing period.
+            Select a new plan. The change will take effect at the end of the
+            current billing period.
           </DialogDescription>
         </DialogHeader>
 
         {catalogQuery.isLoading ? (
-          <div className='py-8 text-center text-muted-foreground'>Loading plans...</div>
+          <div className='py-8 text-center text-muted-foreground'>
+            Loading plans...
+          </div>
         ) : (
           <ScrollArea className='h-[400px] pr-4'>
             <div className='space-y-3'>
@@ -104,7 +114,7 @@ export function ChangePlanDialog({
                     disabled={isCurrent || isPending}
                     className={`w-full rounded-lg border p-4 text-left transition-colors ${
                       isCurrent
-                        ? 'border-primary bg-primary/5 cursor-default'
+                        ? 'cursor-default border-primary bg-primary/5'
                         : isSelected
                           ? 'border-primary bg-primary/10'
                           : 'hover:border-primary/50 hover:bg-muted/50'
@@ -117,7 +127,9 @@ export function ChangePlanDialog({
                           {isCurrent && <Badge>Current</Badge>}
                           {!isCurrent && (
                             <Badge variant='outline'>
-                              {changeType === 'upgrade' ? 'Upgrade' : 'Downgrade'}
+                              {changeType === 'upgrade'
+                                ? 'Upgrade'
+                                : 'Downgrade'}
                             </Badge>
                           )}
                         </div>

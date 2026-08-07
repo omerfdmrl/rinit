@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -10,18 +11,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { handleServerError } from '@/lib/handle-server-error'
-import { useCurrentTeam } from '../../hooks/use-teams'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import type { Plan, SubscriptionAddon } from '../../api'
+import { usePlanPermissions } from '../../hooks/use-plan-permissions'
 import {
   useSubscription,
   usePlansCatalog,
   useUpdateAddon,
   useDetachAddon,
 } from '../../hooks/use-plans'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { AttachAddonDialog } from './attach-addon-dialog'
+import { useCurrentTeam } from '../../hooks/use-teams'
 import { formatCents } from '../utils'
-import type { Plan, SubscriptionAddon } from '../../api'
+import { AttachAddonDialog } from './attach-addon-dialog'
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -33,6 +34,7 @@ function formatDate(dateString: string): string {
 
 export function AddonsManager() {
   const { currentTeam } = useCurrentTeam()
+  const { canManageAddons } = usePlanPermissions()
   const [attachOpen, setAttachOpen] = React.useState(false)
   const [detachAddon, setDetachAddon] = React.useState<{
     addonId: string
@@ -52,9 +54,15 @@ export function AddonsManager() {
     return found?.name ?? addonId
   }
 
-  function getAddonPrice(addonId: string): { amount: number; currency: string } {
+  function getAddonPrice(addonId: string): {
+    amount: number
+    currency: string
+  } {
     const found = catalogAddons.find((a: Plan) => a.id === addonId)
-    return { amount: found?.price_amount ?? 0, currency: found?.currency ?? 'USD' }
+    return {
+      amount: found?.price_amount ?? 0,
+      currency: found?.currency ?? 'USD',
+    }
   }
 
   function handleQuantityChange(addonId: string, newQuantity: number) {
@@ -104,14 +112,17 @@ export function AddonsManager() {
               Manage additional plan addons for your team.
             </p>
           </div>
-          <Button size='sm' onClick={() => setAttachOpen(true)}>
-            Attach addon
-          </Button>
+          {canManageAddons && (
+            <Button size='sm' onClick={() => setAttachOpen(true)}>
+              Attach addon
+            </Button>
+          )}
         </div>
 
         {addons.length === 0 ? (
           <p className='py-8 text-center text-muted-foreground'>
-            No addons attached. Click "Attach addon" to add one.
+            No addons attached.{' '}
+            {canManageAddons ? 'Click "Attach addon" to add one.' : ''}
           </p>
         ) : (
           <Table>
@@ -140,10 +151,14 @@ export function AddonsManager() {
                           className='size-7'
                           disabled={
                             addon.quantity <= 1 ||
-                            updateMutation.isPending
+                            updateMutation.isPending ||
+                            !canManageAddons
                           }
                           onClick={() =>
-                            handleQuantityChange(addon.addon_id, addon.quantity - 1)
+                            handleQuantityChange(
+                              addon.addon_id,
+                              addon.quantity - 1
+                            )
                           }
                         >
                           <Minus className='size-3' />
@@ -155,9 +170,14 @@ export function AddonsManager() {
                           variant='outline'
                           size='icon'
                           className='size-7'
-                          disabled={updateMutation.isPending}
+                          disabled={
+                            updateMutation.isPending || !canManageAddons
+                          }
                           onClick={() =>
-                            handleQuantityChange(addon.addon_id, addon.quantity + 1)
+                            handleQuantityChange(
+                              addon.addon_id,
+                              addon.quantity + 1
+                            )
                           }
                         >
                           <Plus className='size-3' />
@@ -176,7 +196,7 @@ export function AddonsManager() {
                         variant='ghost'
                         size='icon'
                         className='size-7 text-destructive'
-                        disabled={detachMutation.isPending}
+                        disabled={detachMutation.isPending || !canManageAddons}
                         onClick={() => {
                           const name = getAddonName(addon.addon_id)
                           setDetachAddon({ addonId: addon.addon_id, name })

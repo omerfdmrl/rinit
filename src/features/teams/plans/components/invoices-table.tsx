@@ -16,10 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { useInvoices } from '../../hooks/use-plans'
-import { formatCents } from '../utils'
 import type { Invoice } from '../../api'
+import { useInvoices } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
+import { formatCents } from '../utils'
 
 const STATUS_LABELS: Record<string, string> = {
   draft: 'Draft',
@@ -28,7 +28,10 @@ const STATUS_LABELS: Record<string, string> = {
   voided: 'Voided',
 }
 
-const STATUS_VARIANTS: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const STATUS_VARIANTS: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   paid: 'default',
   finalized: 'secondary',
   draft: 'outline',
@@ -99,7 +102,9 @@ export function InvoicesTable() {
       </div>
 
       {invoices.length === 0 ? (
-        <p className='py-8 text-center text-muted-foreground'>No invoices found.</p>
+        <p className='py-8 text-center text-muted-foreground'>
+          No invoices found.
+        </p>
       ) : (
         <>
           <Table>
@@ -115,9 +120,13 @@ export function InvoicesTable() {
             <TableBody>
               {invoices.map((invoice: Invoice) => (
                 <TableRow key={invoice.id}>
-                  <TableCell className='font-medium'>{invoice.number}</TableCell>
+                  <TableCell className='font-medium'>
+                    {invoice.number}
+                  </TableCell>
                   <TableCell>
-                    <Badge variant={STATUS_VARIANTS[invoice.status] ?? 'secondary'}>
+                    <Badge
+                      variant={STATUS_VARIANTS[invoice.status] ?? 'secondary'}
+                    >
                       {STATUS_LABELS[invoice.status] ?? invoice.status}
                     </Badge>
                   </TableCell>
@@ -143,8 +152,8 @@ export function InvoicesTable() {
           {pagination && pagination.total_pages > 1 && (
             <div className='mt-4 flex items-center justify-between'>
               <p className='text-sm text-muted-foreground'>
-                Page {pagination.page} of {pagination.total_pages} ({pagination.total}{' '}
-                total)
+                Page {pagination.page} of {pagination.total_pages} (
+                {pagination.total} total)
               </p>
               <div className='flex gap-2'>
                 <Button

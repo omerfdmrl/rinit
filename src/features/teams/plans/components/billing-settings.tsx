@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { toast } from 'sonner'
+import { handleServerError } from '@/lib/handle-server-error'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,22 +13,24 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
-import { handleServerError } from '@/lib/handle-server-error'
-import { useCurrentTeam } from '../../hooks/use-teams'
+import type { Subscription } from '../../api'
+import { usePlanPermissions } from '../../hooks/use-plan-permissions'
 import {
   useSubscription,
   useUpdateRecharge,
   useSetNegativeLimit,
 } from '../../hooks/use-plans'
-import type { Subscription } from '../../api'
+import { useCurrentTeam } from '../../hooks/use-teams'
 
 function RechargeForm({
   subscription,
   isPending,
+  disabled,
   onSubmit,
 }: {
   subscription: Subscription
   isPending: boolean
+  disabled?: boolean
   onSubmit: (body: {
     enabled: boolean
     min_balance: number
@@ -36,7 +39,9 @@ function RechargeForm({
     cooldown_seconds: number
   }) => void
 }) {
-  const [enabled, setEnabled] = React.useState(subscription.auto_recharge_enabled)
+  const [enabled, setEnabled] = React.useState(
+    subscription.auto_recharge_enabled
+  )
   const [minBalance, setMinBalance] = React.useState(
     subscription.auto_recharge_min_balance
   )
@@ -67,7 +72,7 @@ function RechargeForm({
           id='recharge-enabled'
           checked={enabled}
           onCheckedChange={setEnabled}
-          disabled={isPending}
+          disabled={isPending || disabled}
         />
       </div>
       <Separator />
@@ -79,7 +84,7 @@ function RechargeForm({
             type='number'
             value={minBalance}
             onChange={(e) => setMinBalance(Number(e.target.value))}
-            disabled={isPending}
+            disabled={isPending || disabled}
           />
         </div>
         <div className='space-y-2'>
@@ -89,7 +94,7 @@ function RechargeForm({
             type='number'
             value={amount}
             onChange={(e) => setAmount(Number(e.target.value))}
-            disabled={isPending}
+            disabled={isPending || disabled}
           />
         </div>
         <div className='space-y-2'>
@@ -99,7 +104,7 @@ function RechargeForm({
             type='number'
             value={maxCount}
             onChange={(e) => setMaxCount(Number(e.target.value))}
-            disabled={isPending}
+            disabled={isPending || disabled}
           />
         </div>
         <div className='space-y-2'>
@@ -109,13 +114,15 @@ function RechargeForm({
             type='number'
             value={cooldown}
             onChange={(e) => setCooldown(Number(e.target.value))}
-            disabled={isPending}
+            disabled={isPending || disabled}
           />
         </div>
       </div>
-      <Button type='submit' disabled={isPending}>
-        {isPending ? 'Saving...' : 'Save recharge settings'}
-      </Button>
+      {!disabled && (
+        <Button type='submit' disabled={isPending}>
+          {isPending ? 'Saving...' : 'Save recharge settings'}
+        </Button>
+      )}
     </form>
   )
 }
@@ -123,10 +130,12 @@ function RechargeForm({
 function LimitForm({
   subscription,
   isPending,
+  disabled,
   onSubmit,
 }: {
   subscription: Subscription
   isPending: boolean
+  disabled?: boolean
   onSubmit: (limit: number | null) => void
 }) {
   const initialLimit =
@@ -157,18 +166,21 @@ function LimitForm({
           placeholder='Leave empty for plan default'
           value={limitValue}
           onChange={(e) => setLimitValue(e.target.value)}
-          disabled={isPending}
+          disabled={isPending || disabled}
         />
       </div>
-      <Button type='submit' disabled={isPending}>
-        {isPending ? 'Saving...' : 'Save limit'}
-      </Button>
+      {!disabled && (
+        <Button type='submit' disabled={isPending}>
+          {isPending ? 'Saving...' : 'Save limit'}
+        </Button>
+      )}
     </form>
   )
 }
 
 export function BillingSettings() {
   const { currentTeam } = useCurrentTeam()
+  const { canSettings } = usePlanPermissions()
   const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
   const rechargeMutation = useUpdateRecharge(currentTeam?.id ?? '')
   const negativeLimitMutation = useSetNegativeLimit(currentTeam?.id ?? '')
@@ -236,6 +248,7 @@ export function BillingSettings() {
             key={subscription.id}
             subscription={subscription}
             isPending={rechargeMutation.isPending}
+            disabled={!canSettings}
             onSubmit={handleRechargeSubmit}
           />
         </CardContent>
@@ -254,6 +267,7 @@ export function BillingSettings() {
             key={subscription.id}
             subscription={subscription}
             isPending={negativeLimitMutation.isPending}
+            disabled={!canSettings}
             onSubmit={handleLimitSubmit}
           />
         </CardContent>

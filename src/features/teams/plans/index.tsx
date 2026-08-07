@@ -1,22 +1,47 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeft, CreditCard } from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { usePlanPermissions } from '../hooks/use-plan-permissions'
 import { useCurrentTeam } from '../hooks/use-teams'
-import { PlanOverview } from './components/plan-overview'
 import { AddonsManager } from './components/addons-manager'
-import { UsageTable } from './components/usage-table'
+import { BillingSettings } from './components/billing-settings'
 import { InvoicesTable } from './components/invoices-table'
 import { LedgerTable } from './components/ledger-table'
-import { BillingSettings } from './components/billing-settings'
+import { PlanOverview } from './components/plan-overview'
+import { UsageTable } from './components/usage-table'
 
 export function TeamPlans() {
   const { currentTeam } = useCurrentTeam()
+  const { canView, canSettings } = usePlanPermissions()
+
+  if (!canView && !canSettings) {
+    return (
+      <>
+        <Header fixed>
+          <Search className='me-auto' />
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </Header>
+        <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
+          <div className='flex flex-1 flex-col items-center justify-center gap-2 rounded-lg border p-8 text-center'>
+            <h2 className='text-lg font-semibold'>Insufficient permissions</h2>
+            <p className='max-w-sm text-sm text-muted-foreground'>
+              You do not have permission to view billing and plans. Contact a
+              team owner to request access.
+            </p>
+          </div>
+        </Main>
+      </>
+    )
+  }
+
+  const defaultTab = canView ? 'plan' : 'settings'
 
   return (
     <>
@@ -35,7 +60,9 @@ export function TeamPlans() {
                   <ArrowLeft className='size-4' />
                 </Link>
               </Button>
-              <h2 className='text-2xl font-bold tracking-tight'>Billing & Plan</h2>
+              <h2 className='text-2xl font-bold tracking-tight'>
+                Billing & Plan
+              </h2>
             </div>
             <p className='ml-10 text-muted-foreground'>
               {currentTeam
@@ -46,33 +73,47 @@ export function TeamPlans() {
           <CreditCard className='size-8 text-muted-foreground' />
         </div>
 
-        <Tabs defaultValue='plan' className='w-full'>
+        <Tabs defaultValue={defaultTab} className='w-full'>
           <TabsList>
-            <TabsTrigger value='plan'>Plan</TabsTrigger>
-            <TabsTrigger value='addons'>Addons</TabsTrigger>
-            <TabsTrigger value='usage'>Usage</TabsTrigger>
-            <TabsTrigger value='invoices'>Invoices</TabsTrigger>
-            <TabsTrigger value='ledger'>Ledger</TabsTrigger>
-            <TabsTrigger value='settings'>Settings</TabsTrigger>
+            {canView && <TabsTrigger value='plan'>Plan</TabsTrigger>}
+            {canView && <TabsTrigger value='addons'>Addons</TabsTrigger>}
+            {canView && <TabsTrigger value='usage'>Usage</TabsTrigger>}
+            {canView && <TabsTrigger value='invoices'>Invoices</TabsTrigger>}
+            {canView && <TabsTrigger value='ledger'>Ledger</TabsTrigger>}
+            {canSettings && (
+              <TabsTrigger value='settings'>Settings</TabsTrigger>
+            )}
           </TabsList>
-          <TabsContent value='plan' className='mt-4'>
-            <PlanOverview />
-          </TabsContent>
-          <TabsContent value='addons' className='mt-4'>
-            <AddonsManager />
-          </TabsContent>
-          <TabsContent value='usage' className='mt-4'>
-            <UsageTable />
-          </TabsContent>
-          <TabsContent value='invoices' className='mt-4'>
-            <InvoicesTable />
-          </TabsContent>
-          <TabsContent value='ledger' className='mt-4'>
-            <LedgerTable />
-          </TabsContent>
-          <TabsContent value='settings' className='mt-4'>
-            <BillingSettings />
-          </TabsContent>
+          {canView && (
+            <TabsContent value='plan' className='mt-4'>
+              <PlanOverview />
+            </TabsContent>
+          )}
+          {canView && (
+            <TabsContent value='addons' className='mt-4'>
+              <AddonsManager />
+            </TabsContent>
+          )}
+          {canView && (
+            <TabsContent value='usage' className='mt-4'>
+              <UsageTable />
+            </TabsContent>
+          )}
+          {canView && (
+            <TabsContent value='invoices' className='mt-4'>
+              <InvoicesTable />
+            </TabsContent>
+          )}
+          {canView && (
+            <TabsContent value='ledger' className='mt-4'>
+              <LedgerTable />
+            </TabsContent>
+          )}
+          {canSettings && (
+            <TabsContent value='settings' className='mt-4'>
+              <BillingSettings />
+            </TabsContent>
+          )}
         </Tabs>
       </Main>
     </>

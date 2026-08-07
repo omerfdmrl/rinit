@@ -24,6 +24,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { SignOutDialog } from '@/components/sign-out-dialog'
+import { usePlanPermissions } from '@/features/teams/hooks/use-plan-permissions'
 import { useTeamUserPermissions } from '@/features/teams/hooks/use-team-user-permissions'
 
 type NavUserProps = {
@@ -38,7 +39,10 @@ export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar()
   const [open, setOpen] = useDialogState()
   const { canListMembers, canListRoles } = useTeamUserPermissions()
+  const { canView: canViewPlans, canSettings: canPlanSettings } =
+    usePlanPermissions()
   const canManageTeam = canListMembers || canListRoles
+  const canManageBilling = canViewPlans || canPlanSettings
 
   return (
     <>
@@ -87,12 +91,14 @@ export function NavUser({ user }: NavUserProps) {
                     Account
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to='/teams/plans'>
-                    <CreditCard />
-                    Billing
-                  </Link>
-                </DropdownMenuItem>
+                {canManageBilling && (
+                  <DropdownMenuItem asChild>
+                    <Link to='/teams/plans'>
+                      <CreditCard />
+                      Billing
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 {canManageTeam && (
                   <DropdownMenuItem asChild>
                     <Link to='/teams'>

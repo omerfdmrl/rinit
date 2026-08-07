@@ -36,7 +36,7 @@ export const Route = createFileRoute('/_authenticated/admin/roles/')({
       }))
 
     if (!me.user.permissions.includes(adminRolePermissions.list)) {
-      throw redirect({ to: '/503' })
+      throw redirect({ to: '/403' })
     }
   },
   component: AdminRoles,

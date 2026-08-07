@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { usePlanUsage } from '../../hooks/use-plans'
 import type { PlanUsage } from '../../api'
+import { usePlanUsage } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
 
 export function UsageTable() {
   const { currentTeam } = useCurrentTeam()

@@ -16,10 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useCurrentTeam } from '../../hooks/use-teams'
-import { useLedger } from '../../hooks/use-plans'
-import { formatCents } from '../utils'
 import type { LedgerEntry } from '../../api'
+import { useLedger } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
+import { formatCents } from '../utils'
 
 const ENTRY_TYPE_LABELS: Record<string, string> = {
   subscription_charge: 'Subscription',
@@ -31,7 +31,10 @@ const ENTRY_TYPE_LABELS: Record<string, string> = {
   invoice_payment: 'Invoice',
 }
 
-const ENTRY_TYPE_VARIANTS: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+const ENTRY_TYPE_VARIANTS: Record<
+  string,
+  'default' | 'secondary' | 'destructive' | 'outline'
+> = {
   manual_credit: 'default',
   recharge: 'default',
   refund: 'default',
@@ -54,9 +57,9 @@ function formatDate(dateString: string): string {
 export function LedgerTable() {
   const { currentTeam } = useCurrentTeam()
   const [page, setPage] = React.useState(1)
-  const [entryTypeFilter, setEntryTypeFilter] = React.useState<string | undefined>(
-    undefined
-  )
+  const [entryTypeFilter, setEntryTypeFilter] = React.useState<
+    string | undefined
+  >(undefined)
 
   const ledgerQuery = useLedger(currentTeam?.id ?? '', {
     page,
@@ -130,7 +133,9 @@ export function LedgerTable() {
                 <TableRow key={entry.id}>
                   <TableCell>
                     <Badge
-                      variant={ENTRY_TYPE_VARIANTS[entry.entry_type] ?? 'secondary'}
+                      variant={
+                        ENTRY_TYPE_VARIANTS[entry.entry_type] ?? 'secondary'
+                      }
                     >
                       {ENTRY_TYPE_LABELS[entry.entry_type] ?? entry.entry_type}
                     </Badge>
@@ -139,7 +144,11 @@ export function LedgerTable() {
                     {entry.description || '—'}
                   </TableCell>
                   <TableCell className='text-right font-medium'>
-                    <span className={entry.amount < 0 ? 'text-destructive' : 'text-green-600'}>
+                    <span
+                      className={
+                        entry.amount < 0 ? 'text-destructive' : 'text-green-600'
+                      }
+                    >
                       {entry.amount < 0 ? '' : '+'}
                       {formatCents(entry.amount, entry.currency)}
                     </span>
@@ -158,8 +167,8 @@ export function LedgerTable() {
           {pagination && pagination.total_pages > 1 && (
             <div className='mt-4 flex items-center justify-between'>
               <p className='text-sm text-muted-foreground'>
-                Page {pagination.page} of {pagination.total_pages} ({pagination.total}{' '}
-                total)
+                Page {pagination.page} of {pagination.total_pages} (
+                {pagination.total} total)
               </p>
               <div className='flex gap-2'>
                 <Button

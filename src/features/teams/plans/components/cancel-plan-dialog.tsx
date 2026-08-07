@@ -1,15 +1,18 @@
 import { toast } from 'sonner'
-import { ConfirmDialog } from '@/components/confirm-dialog'
 import { handleServerError } from '@/lib/handle-server-error'
-import { useCurrentTeam } from '../../hooks/use-teams'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useCancelSubscription } from '../../hooks/use-plans'
+import { useCurrentTeam } from '../../hooks/use-teams'
 
 type CancelPlanDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function CancelPlanDialog({ open, onOpenChange }: CancelPlanDialogProps) {
+export function CancelPlanDialog({
+  open,
+  onOpenChange,
+}: CancelPlanDialogProps) {
   const { currentTeam } = useCurrentTeam()
   const cancelMutation = useCancelSubscription(currentTeam?.id ?? '')
 
