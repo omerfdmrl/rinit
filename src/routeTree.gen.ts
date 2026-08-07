@@ -38,6 +38,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
+import { Route as AuthenticatedAdminTeamsIndexRouteImport } from './routes/_authenticated/admin/teams/index'
 import { Route as AuthenticatedAdminRolesIndexRouteImport } from './routes/_authenticated/admin/roles/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -192,6 +193,12 @@ const AuthenticatedAdminUsersIndexRoute =
     path: '/admin/users/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminTeamsIndexRoute =
+  AuthenticatedAdminTeamsIndexRouteImport.update({
+    id: '/admin/teams/',
+    path: '/admin/teams/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminRolesIndexRoute =
   AuthenticatedAdminRolesIndexRouteImport.update({
     id: '/admin/roles/',
@@ -227,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
   '/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
+  '/admin/teams/': typeof AuthenticatedAdminTeamsIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -256,6 +264,7 @@ export interface FileRoutesByTo {
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/admin/roles': typeof AuthenticatedAdminRolesIndexRoute
+  '/admin/teams': typeof AuthenticatedAdminTeamsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -289,6 +298,7 @@ export interface FileRoutesById {
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
+  '/_authenticated/admin/teams/': typeof AuthenticatedAdminTeamsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -321,6 +331,7 @@ export interface FileRouteTypes {
     | '/teams/'
     | '/users/'
     | '/admin/roles/'
+    | '/admin/teams/'
     | '/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/teams'
     | '/users'
     | '/admin/roles'
+    | '/admin/teams'
     | '/admin/users'
   id:
     | '__root__'
@@ -382,6 +394,7 @@ export interface FileRouteTypes {
     | '/_authenticated/teams/'
     | '/_authenticated/users/'
     | '/_authenticated/admin/roles/'
+    | '/_authenticated/admin/teams/'
     | '/_authenticated/admin/users/'
   fileRoutesById: FileRoutesById
 }
@@ -600,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/teams/': {
+      id: '/_authenticated/admin/teams/'
+      path: '/admin/teams'
+      fullPath: '/admin/teams/'
+      preLoaderRoute: typeof AuthenticatedAdminTeamsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/roles/': {
       id: '/_authenticated/admin/roles/'
       path: '/admin/roles'
@@ -667,6 +687,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedAdminRolesIndexRoute: typeof AuthenticatedAdminRolesIndexRoute
+  AuthenticatedAdminTeamsIndexRoute: typeof AuthenticatedAdminTeamsIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
 }
 
@@ -682,6 +703,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedAdminRolesIndexRoute: AuthenticatedAdminRolesIndexRoute,
+  AuthenticatedAdminTeamsIndexRoute: AuthenticatedAdminTeamsIndexRoute,
   AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
 }
 

@@ -1,4 +1,5 @@
 import {
+  Building2,
   LayoutDashboard,
   ListTodo,
   Package,
@@ -8,6 +9,7 @@ import {
   MessagesSquare,
 } from 'lucide-react'
 import { adminRolePermissions } from '@/features/roles/hooks/use-admin-permissions'
+import { adminTeamPermissions } from '@/features/teams/admin/hooks/use-admin-team-permissions'
 import { adminUserPermissions } from '@/features/users/hooks/use-admin-permissions'
 import { type SidebarData } from '../types'
 
@@ -58,6 +60,12 @@ export const sidebarData: SidebarData = {
           url: '/admin/roles',
           icon: ShieldCheck,
           permission: adminRolePermissions.list,
+        },
+        {
+          title: 'Teams',
+          url: '/admin/teams',
+          icon: Building2,
+          permission: adminTeamPermissions.list,
         },
       ],
     },
