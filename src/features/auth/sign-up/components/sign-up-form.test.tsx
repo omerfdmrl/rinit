@@ -47,7 +47,7 @@ vi.mock('@tanstack/react-router', async (orig) => {
 })
 
 const sampleUser = {
-  id: 'uuid',
+  id: 1,
   name: 'John Doe',
   email: 'a@b.com',
   two_factor_enabled: false,
@@ -135,7 +135,7 @@ describe('SignUpForm', () => {
   it('registers, sets the user, and navigates home on success', async () => {
     registerMock.mockResolvedValue({
       user: sampleUser,
-      team_id: 'team-uuid',
+      team_id: 1,
       message: 'Account created — your workspace is ready',
     })
 

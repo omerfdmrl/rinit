@@ -25,7 +25,7 @@ import {
 const PLANS_STALE_TIME = 5 * 60 * 1000
 
 export function usePlansCatalog(
-  teamId: string,
+  teamId: number,
   options?: { enabled?: boolean }
 ) {
   return useQuery({
@@ -37,7 +37,7 @@ export function usePlansCatalog(
 }
 
 export function useSubscription(
-  teamId: string,
+  teamId: number,
   options?: { enabled?: boolean }
 ) {
   return useQuery({
@@ -48,13 +48,13 @@ export function useSubscription(
   })
 }
 
-function subscriptionKey(teamId: string) {
+function subscriptionKey(teamId: number) {
   return [...subscriptionQueryKey, teamId] as const
 }
 
 function setSubscriptionInCache(
   queryClient: ReturnType<typeof useQueryClient>,
-  teamId: string,
+  teamId: number,
   subscription: Subscription
 ) {
   queryClient.setQueryData<SubscriptionResponse | undefined>(
@@ -65,7 +65,7 @@ function setSubscriptionInCache(
 
 function patchSubscriptionInCache(
   queryClient: ReturnType<typeof useQueryClient>,
-  teamId: string,
+  teamId: number,
   updater: (subscription: Subscription) => Subscription
 ) {
   queryClient.setQueryData<SubscriptionResponse | undefined>(
@@ -76,7 +76,7 @@ function patchSubscriptionInCache(
 
 async function snapshotSubscription(
   queryClient: ReturnType<typeof useQueryClient>,
-  teamId: string
+  teamId: number
 ) {
   const queryKey = subscriptionKey(teamId)
   await queryClient.cancelQueries({ queryKey })
@@ -86,7 +86,7 @@ async function snapshotSubscription(
 
 function rollbackSubscription(
   queryClient: ReturnType<typeof useQueryClient>,
-  teamId: string,
+  teamId: number,
   previous?: SubscriptionResponse
 ) {
   if (previous) {
@@ -94,12 +94,12 @@ function rollbackSubscription(
   }
 }
 
-export function useChangePlan(teamId: string) {
+export function useChangePlan(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (body: {
-      plan_id: string
+      plan_id: number
       change_type: 'upgrade' | 'downgrade'
     }) => changePlan(teamId, body),
     onMutate: async (body) => {
@@ -120,7 +120,7 @@ export function useChangePlan(teamId: string) {
   })
 }
 
-export function useCancelSubscription(teamId: string) {
+export function useCancelSubscription(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -142,7 +142,7 @@ export function useCancelSubscription(teamId: string) {
   })
 }
 
-export function usePlanUsage(teamId: string) {
+export function usePlanUsage(teamId: number) {
   return useQuery({
     queryKey: [...planUsageQueryKey, teamId],
     queryFn: () => getPlanUsage(teamId),
@@ -152,7 +152,7 @@ export function usePlanUsage(teamId: string) {
 }
 
 export function useInvoices(
-  teamId: string,
+  teamId: number,
   params?: { page?: number; per_page?: number; status?: string }
 ) {
   return useQuery({
@@ -164,7 +164,7 @@ export function useInvoices(
 }
 
 export function useLedger(
-  teamId: string,
+  teamId: number,
   params?: { page?: number; per_page?: number; entry_type?: string }
 ) {
   return useQuery({
@@ -175,7 +175,7 @@ export function useLedger(
   })
 }
 
-export function useUpdateRecharge(teamId: string) {
+export function useUpdateRecharge(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -217,7 +217,7 @@ export function useUpdateRecharge(teamId: string) {
   })
 }
 
-export function useSetNegativeLimit(teamId: string) {
+export function useSetNegativeLimit(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -242,7 +242,7 @@ export function useSetNegativeLimit(teamId: string) {
 
 function patchAddonsInCache(
   queryClient: ReturnType<typeof useQueryClient>,
-  teamId: string,
+  teamId: number,
   updater: (addons: SubscriptionAddon[]) => SubscriptionAddon[]
 ) {
   queryClient.setQueryData<SubscriptionResponse | undefined>(
@@ -251,7 +251,7 @@ function patchAddonsInCache(
   )
 }
 
-export function useAttachAddon(teamId: string) {
+export function useAttachAddon(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -259,18 +259,18 @@ export function useAttachAddon(teamId: string) {
       addonId,
       quantity,
     }: {
-      addonId: string
+      addonId: number
       quantity: number
     }) => attachAddon(teamId, addonId, { quantity }),
     onMutate: async ({ addonId, quantity }) => {
       const context = await snapshotSubscription(queryClient, teamId)
-      const pendingId = `pending-${Date.now()}`
+      const pendingId = Date.now()
       const base = context.previous?.subscription
       patchAddonsInCache(queryClient, teamId, (addons) => [
         ...addons,
         {
           id: pendingId,
-          subscription_id: base?.id ?? '',
+          subscription_id: base?.id ?? 0,
           addon_id: addonId,
           quantity,
           added_at: new Date().toISOString(),
@@ -303,7 +303,7 @@ export function useAttachAddon(teamId: string) {
   })
 }
 
-export function useUpdateAddon(teamId: string) {
+export function useUpdateAddon(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -311,7 +311,7 @@ export function useUpdateAddon(teamId: string) {
       addonId,
       quantity,
     }: {
-      addonId: string
+      addonId: number
       quantity: number
     }) => updateAddonQuantity(teamId, addonId, { quantity }),
     onMutate: async ({ addonId, quantity }) => {
@@ -327,11 +327,11 @@ export function useUpdateAddon(teamId: string) {
   })
 }
 
-export function useDetachAddon(teamId: string) {
+export function useDetachAddon(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (addonId: string) => detachAddon(teamId, addonId),
+    mutationFn: (addonId: number) => detachAddon(teamId, addonId),
     onMutate: async (addonId) => {
       const context = await snapshotSubscription(queryClient, teamId)
       patchAddonsInCache(queryClient, teamId, (addons) =>

@@ -3,7 +3,7 @@ import { http } from '@/lib/http'
 export const adminUsersQueryKey = ['admin', 'users'] as const
 
 export type AdminUser = {
-  id: string
+  id: number
   name: string
   email: string
   two_factor_enabled: boolean
@@ -59,7 +59,7 @@ export async function createAdminUser(
 export type AdminUserUpdateBody = Partial<AdminUserCreateBody>
 
 export async function updateAdminUser(
-  userId: string,
+  userId: number,
   body: AdminUserUpdateBody
 ): Promise<{ user: AdminUser; message: string }> {
   const { data } = await http.put<{ user: AdminUser; message: string }>(
@@ -70,7 +70,7 @@ export async function updateAdminUser(
 }
 
 export async function deleteAdminUser(
-  userId: string
+  userId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/admin/users/${userId}`
@@ -79,7 +79,7 @@ export async function deleteAdminUser(
 }
 
 export async function sendAdminPasswordReset(
-  userId: string
+  userId: number
 ): Promise<{ message: string }> {
   const { data } = await http.post<{ message: string }>(
     `/admin/users/${userId}/send-password-reset`

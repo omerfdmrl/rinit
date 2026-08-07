@@ -22,7 +22,7 @@ import { useAssignMemberRole, useTeamRoles } from '../hooks/use-teams'
 type AssignRoleDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  teamId: string
+  teamId: number
   member: TeamMember | null
 }
 
@@ -31,7 +31,7 @@ function AssignRoleForm({
   member,
   onOpenChange,
 }: {
-  teamId: string
+  teamId: number
   member: TeamMember
   onOpenChange: (open: boolean) => void
 }) {

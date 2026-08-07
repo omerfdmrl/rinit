@@ -31,17 +31,17 @@ export function ChangePlanDialog({
   onOpenChange,
 }: ChangePlanDialogProps) {
   const { currentTeam } = useCurrentTeam()
-  const [selectedPlanId, setSelectedPlanId] = React.useState<string | null>(
+  const [selectedPlanId, setSelectedPlanId] = React.useState<number | null>(
     null
   )
 
-  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '', {
+  const catalogQuery = usePlansCatalog(currentTeam?.id ?? 0, {
     enabled: open,
   })
-  const subscriptionQuery = useSubscription(currentTeam?.id ?? '', {
+  const subscriptionQuery = useSubscription(currentTeam?.id ?? 0, {
     enabled: open,
   })
-  const changeMutation = useChangePlan(currentTeam?.id ?? '')
+  const changeMutation = useChangePlan(currentTeam?.id ?? 0)
 
   const plans = catalogQuery.data?.plans ?? []
   const currentPlanId = subscriptionQuery.data?.subscription.plan_id

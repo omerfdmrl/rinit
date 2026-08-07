@@ -61,8 +61,8 @@ export function TeamRoles() {
     React.useState<TeamRoleWithPermissions | null>(null)
   const [drafts, setDrafts] = React.useState<Record<string, string[]>>({})
 
-  const rolesQuery = useTeamRoles(currentTeam?.id ?? '')
-  const updateMutation = useUpdateTeamRole(currentTeam?.id ?? '')
+  const rolesQuery = useTeamRoles(currentTeam?.id ?? 0)
+  const updateMutation = useUpdateTeamRole(currentTeam?.id ?? 0)
 
   const roles = React.useMemo(
     () => rolesQuery.data?.roles ?? [],
@@ -85,12 +85,12 @@ export function TeamRoles() {
     [allPermissions]
   )
 
-  const serverKeysOf = (roleId: string) =>
+  const serverKeysOf = (roleId: number) =>
     roles
       .find((r) => r.role.id === roleId)
       ?.permissions.map((p) => p.permission_key) ?? []
 
-  const togglePermission = (roleId: string, permissionKey: string) => {
+  const togglePermission = (roleId: number, permissionKey: string) => {
     setDrafts((prev) => {
       const current = prev[roleId] ?? serverKeysOf(roleId)
       const next = current.includes(permissionKey)

@@ -31,7 +31,7 @@ export async function register(body: {
 }) {
   const { data } = await http.post<{
     user: AuthUser
-    team_id: string
+    team_id: number
     message: string
   }>('/auth/register', body)
   return data

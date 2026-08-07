@@ -14,7 +14,7 @@ export function CancelPlanDialog({
   onOpenChange,
 }: CancelPlanDialogProps) {
   const { currentTeam } = useCurrentTeam()
-  const cancelMutation = useCancelSubscription(currentTeam?.id ?? '')
+  const cancelMutation = useCancelSubscription(currentTeam?.id ?? 0)
 
   function handleConfirm() {
     if (!currentTeam) return

@@ -46,7 +46,7 @@ export function useUpdateAdminRole() {
       roleId,
       body,
     }: {
-      roleId: string
+      roleId: number
       body: AdminRoleUpdateBody
     }) => updateAdminRole(roleId, body),
     onSuccess: () => {
@@ -59,14 +59,14 @@ export function useDeleteAdminRole() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (roleId: string) => deleteAdminRole(roleId),
+    mutationFn: (roleId: number) => deleteAdminRole(roleId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminRolesQueryKey })
     },
   })
 }
 
-export function useRolePermissions(roleId: string) {
+export function useRolePermissions(roleId: number) {
   return useQuery({
     queryKey: adminRolePermissionsQueryKey(roleId),
     queryFn: () => getRolePermissions(roleId),
@@ -74,11 +74,11 @@ export function useRolePermissions(roleId: string) {
   })
 }
 
-export function useAssignRolePermission(roleId: string) {
+export function useAssignRolePermission(roleId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (permissionId: string) =>
+    mutationFn: (permissionId: number) =>
       assignRolePermission(roleId, permissionId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -88,11 +88,11 @@ export function useAssignRolePermission(roleId: string) {
   })
 }
 
-export function useRemoveRolePermission(roleId: string) {
+export function useRemoveRolePermission(roleId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (permissionId: string) =>
+    mutationFn: (permissionId: number) =>
       removeRolePermission(roleId, permissionId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -129,7 +129,7 @@ export function useUpdateAdminPermission() {
       permissionId,
       body,
     }: {
-      permissionId: string
+      permissionId: number
       body: { description?: string }
     }) => updateAdminPermission(permissionId, body),
     onSuccess: () => {

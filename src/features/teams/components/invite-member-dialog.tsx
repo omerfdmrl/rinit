@@ -22,7 +22,7 @@ import { useInviteTeamMember, useTeamRoles } from '../hooks/use-teams'
 type InviteMemberDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  teamId: string
+  teamId: number
 }
 
 export function InviteMemberDialog({

@@ -22,7 +22,7 @@ import {
 type EditRoleDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  teamId: string
+  teamId: number
   role?: TeamRoleWithPermissions | null
 }
 
@@ -31,7 +31,7 @@ function EditRoleForm({
   role,
   onOpenChange,
 }: {
-  teamId: string
+  teamId: number
   role: TeamRoleWithPermissions | null
   onOpenChange: (open: boolean) => void
 }) {

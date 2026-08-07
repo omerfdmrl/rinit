@@ -13,7 +13,7 @@ import { useCurrentTeam } from '../../hooks/use-teams'
 
 export function UsageTable() {
   const { currentTeam } = useCurrentTeam()
-  const usageQuery = usePlanUsage(currentTeam?.id ?? '')
+  const usageQuery = usePlanUsage(currentTeam?.id ?? 0)
   const usage = usageQuery.data?.usage ?? []
 
   if (usageQuery.isLoading) {

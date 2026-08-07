@@ -5,7 +5,7 @@ import { type AdminRole } from '../../api'
 import { AdminRoleActionDialog } from './admin-role-action-dialog'
 
 const MOCK_ROLE: AdminRole = {
-  id: 'editor_uuid',
+  id: 1,
   role_name: 'editor',
   team_id: null,
   is_default: false,

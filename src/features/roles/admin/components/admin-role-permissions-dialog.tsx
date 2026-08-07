@@ -37,7 +37,7 @@ export function AdminRolePermissionsDialog({
 }: AdminRolePermissionsDialogProps) {
   const { canUpdate } = useAdminRolePermissions()
   const [search, setSearch] = useState('')
-  const [pendingKeys, setPendingKeys] = useState<Set<string>>(new Set())
+  const [pendingKeys, setPendingKeys] = useState<Set<number>>(new Set())
 
   const rolePermissionsQuery = useRolePermissions(role.id)
   const catalogQuery = useAdminPermissions({ per_page: 100 })
@@ -47,7 +47,9 @@ export function AdminRolePermissionsDialog({
 
   const assigned = useMemo(() => {
     const perms = rolePermissionsQuery.data?.permissions ?? []
-    return new Map(perms.map((perm) => [perm.id, perm]))
+    return new Map<number, AdminPermission>(
+      perms.map((perm) => [perm.id, perm])
+    )
   }, [rolePermissionsQuery.data?.permissions])
 
   const catalog = useMemo(() => {
@@ -61,7 +63,7 @@ export function AdminRolePermissionsDialog({
     )
   }, [catalogQuery.data?.permissions, search])
 
-  const setPending = (permissionId: string, isPending: boolean) => {
+  const setPending = (permissionId: number, isPending: boolean) => {
     setPendingKeys((prev) => {
       const next = new Set(prev)
       if (isPending) {

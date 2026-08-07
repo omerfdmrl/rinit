@@ -6,7 +6,7 @@ async function importAuthStore() {
 }
 
 const sampleUser = {
-  id: 'uuid',
+  id: 1,
   name: 'John Doe',
   email: 'user@example.com',
   two_factor_enabled: false,

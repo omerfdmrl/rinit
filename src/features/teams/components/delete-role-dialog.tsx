@@ -6,7 +6,7 @@ import { useDeleteTeamRole } from '../hooks/use-teams'
 type DeleteRoleDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  teamId: string
+  teamId: number
   role: TeamRole | null
 }
 

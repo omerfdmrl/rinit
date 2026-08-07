@@ -1,21 +1,21 @@
 import { http } from '@/lib/http'
 
 export const adminTeamsQueryKey = ['admin', 'teams'] as const
-export const adminTeamUsersQueryKey = (teamId: string) =>
+export const adminTeamUsersQueryKey = (teamId: number) =>
   ['admin', 'teams', teamId, 'users'] as const
 
 export type AdminTeam = {
-  id: string
+  id: number
   name: string
-  created_by: string
+  created_by: number
   created_at: string
   updated_at: string
 }
 
 export type AdminTeamUser = {
-  id: string
-  team_id: string
-  user_id: string
+  id: number
+  team_id: number
+  user_id: number
   role: string
   created_at: string
 }
@@ -43,7 +43,7 @@ export type AdminTeamsListParams = {
   sort_by?: string
   sort_order?: 'asc' | 'desc'
   search?: string
-  created_by?: string
+  created_by?: number
 }
 
 export type AdminTeamUsersListParams = {
@@ -52,7 +52,7 @@ export type AdminTeamUsersListParams = {
   sort_by?: string
   sort_order?: 'asc' | 'desc'
   role?: string
-  user_id?: string
+  user_id?: number
 }
 
 export async function getAdminTeams(
@@ -75,7 +75,7 @@ export async function createAdminTeam(body: {
 }
 
 export async function updateAdminTeam(
-  teamId: string,
+  teamId: number,
   body: { name: string }
 ): Promise<{ team: AdminTeam; message: string }> {
   const { data } = await http.put<{ team: AdminTeam; message: string }>(
@@ -86,7 +86,7 @@ export async function updateAdminTeam(
 }
 
 export async function deleteAdminTeam(
-  teamId: string
+  teamId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/admin/teams/${teamId}`
@@ -95,7 +95,7 @@ export async function deleteAdminTeam(
 }
 
 export async function getAdminTeamUsers(
-  teamId: string,
+  teamId: number,
   params?: AdminTeamUsersListParams
 ): Promise<AdminTeamUsersResponse> {
   const { data } = await http.get<AdminTeamUsersResponse>(

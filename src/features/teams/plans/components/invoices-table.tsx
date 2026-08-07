@@ -53,7 +53,7 @@ export function InvoicesTable() {
     undefined
   )
 
-  const invoicesQuery = useInvoices(currentTeam?.id ?? '', {
+  const invoicesQuery = useInvoices(currentTeam?.id ?? 0, {
     page,
     per_page: 10,
     status: statusFilter,

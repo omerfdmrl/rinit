@@ -61,7 +61,7 @@ export function LedgerTable() {
     string | undefined
   >(undefined)
 
-  const ledgerQuery = useLedger(currentTeam?.id ?? '', {
+  const ledgerQuery = useLedger(currentTeam?.id ?? 0, {
     page,
     per_page: 10,
     entry_type: entryTypeFilter,

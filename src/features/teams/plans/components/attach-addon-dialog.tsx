@@ -37,10 +37,10 @@ export function AttachAddonDialog({
   const [selectedAddonId, setSelectedAddonId] = React.useState<string>('')
   const [quantity, setQuantity] = React.useState(1)
 
-  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '', {
+  const catalogQuery = usePlansCatalog(currentTeam?.id ?? 0, {
     enabled: open,
   })
-  const attachMutation = useAttachAddon(currentTeam?.id ?? '')
+  const attachMutation = useAttachAddon(currentTeam?.id ?? 0)
   const isPending = attachMutation.isPending
 
   const addons = catalogQuery.data?.addons ?? []
@@ -50,7 +50,7 @@ export function AttachAddonDialog({
     if (!selectedAddonId || !currentTeam) return
 
     attachMutation.mutate(
-      { addonId: selectedAddonId, quantity },
+      { addonId: Number(selectedAddonId), quantity },
       {
         onSuccess: () => {
           toast.success('Addon attached successfully')
@@ -95,7 +95,7 @@ export function AttachAddonDialog({
               </SelectTrigger>
               <SelectContent>
                 {addons.map((addon: Plan) => (
-                  <SelectItem key={addon.id} value={addon.id}>
+                  <SelectItem key={addon.id} value={String(addon.id)}>
                     {addon.name} —{' '}
                     {formatCents(addon.price_amount, addon.currency)}
                   </SelectItem>

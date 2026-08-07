@@ -55,7 +55,7 @@ export function PlanOverview() {
   const [changeOpen, setChangeOpen] = React.useState(false)
   const [cancelOpen, setCancelOpen] = React.useState(false)
 
-  const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
+  const subscriptionQuery = useSubscription(currentTeam?.id ?? 0)
   const data = subscriptionQuery.data
 
   if (subscriptionQuery.isLoading) {

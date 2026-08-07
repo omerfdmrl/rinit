@@ -37,24 +37,24 @@ export function AddonsManager() {
   const { canManageAddons } = usePlanPermissions()
   const [attachOpen, setAttachOpen] = React.useState(false)
   const [detachAddon, setDetachAddon] = React.useState<{
-    addonId: string
+    addonId: number
     name: string
   } | null>(null)
 
-  const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
-  const catalogQuery = usePlansCatalog(currentTeam?.id ?? '')
-  const updateMutation = useUpdateAddon(currentTeam?.id ?? '')
-  const detachMutation = useDetachAddon(currentTeam?.id ?? '')
+  const subscriptionQuery = useSubscription(currentTeam?.id ?? 0)
+  const catalogQuery = usePlansCatalog(currentTeam?.id ?? 0)
+  const updateMutation = useUpdateAddon(currentTeam?.id ?? 0)
+  const detachMutation = useDetachAddon(currentTeam?.id ?? 0)
 
   const addons = subscriptionQuery.data?.addons ?? []
   const catalogAddons = catalogQuery.data?.addons ?? []
 
-  function getAddonName(addonId: string): string {
+  function getAddonName(addonId: number): string {
     const found = catalogAddons.find((a: Plan) => a.id === addonId)
-    return found?.name ?? addonId
+    return found?.name ?? String(addonId)
   }
 
-  function getAddonPrice(addonId: string): {
+  function getAddonPrice(addonId: number): {
     amount: number
     currency: string
   } {
@@ -65,7 +65,7 @@ export function AddonsManager() {
     }
   }
 
-  function handleQuantityChange(addonId: string, newQuantity: number) {
+  function handleQuantityChange(addonId: number, newQuantity: number) {
     if (!currentTeam || newQuantity < 1) return
     updateMutation.mutate(
       { addonId, quantity: newQuantity },

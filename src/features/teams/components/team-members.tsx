@@ -51,7 +51,7 @@ export function TeamMembers() {
   )
   const [assignRole, setAssignRole] = React.useState<TeamMember | null>(null)
 
-  const membersQuery = useTeamMembers(currentTeam?.id ?? '')
+  const membersQuery = useTeamMembers(currentTeam?.id ?? 0)
   const members = membersQuery.data?.members ?? []
 
   if (!currentTeam) {

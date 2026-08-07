@@ -181,9 +181,9 @@ function LimitForm({
 export function BillingSettings() {
   const { currentTeam } = useCurrentTeam()
   const { canSettings } = usePlanPermissions()
-  const subscriptionQuery = useSubscription(currentTeam?.id ?? '')
-  const rechargeMutation = useUpdateRecharge(currentTeam?.id ?? '')
-  const negativeLimitMutation = useSetNegativeLimit(currentTeam?.id ?? '')
+  const subscriptionQuery = useSubscription(currentTeam?.id ?? 0)
+  const rechargeMutation = useUpdateRecharge(currentTeam?.id ?? 0)
+  const negativeLimitMutation = useSetNegativeLimit(currentTeam?.id ?? 0)
 
   const subscription = subscriptionQuery.data?.subscription
 

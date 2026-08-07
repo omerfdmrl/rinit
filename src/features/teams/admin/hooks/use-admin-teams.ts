@@ -37,7 +37,7 @@ export function useUpdateAdminTeam() {
       teamId,
       body,
     }: {
-      teamId: string
+      teamId: number
       body: { name: string }
     }) => updateAdminTeam(teamId, body),
     onSuccess: () => {
@@ -50,7 +50,7 @@ export function useDeleteAdminTeam() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (teamId: string) => deleteAdminTeam(teamId),
+    mutationFn: (teamId: number) => deleteAdminTeam(teamId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminTeamsQueryKey })
     },
@@ -58,7 +58,7 @@ export function useDeleteAdminTeam() {
 }
 
 export function useAdminTeamUsers(
-  teamId: string,
+  teamId: number,
   params?: AdminTeamUsersListParams
 ) {
   return useQuery({

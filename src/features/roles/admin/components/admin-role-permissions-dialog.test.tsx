@@ -5,7 +5,7 @@ import { type AdminPermission, type AdminRole } from '../../api'
 import { AdminRolePermissionsDialog } from './admin-role-permissions-dialog'
 
 const MOCK_ROLE: AdminRole = {
-  id: 'admin_uuid',
+  id: 1,
   role_name: 'admin',
   team_id: null,
   is_default: false,
@@ -15,7 +15,7 @@ const MOCK_ROLE: AdminRole = {
 }
 
 const USER_LIST_PERMISSION: AdminPermission = {
-  id: 'perm-users-list',
+  id: 2,
   permission_key: 'users.list',
   description: 'List users',
   is_system: true,
@@ -24,7 +24,7 @@ const USER_LIST_PERMISSION: AdminPermission = {
 }
 
 const TEAM_LIST_PERMISSION: AdminPermission = {
-  id: 'perm-teams-list',
+  id: 3,
   permission_key: 'teams.members.list',
   description: 'List team members',
   is_system: false,

@@ -22,13 +22,13 @@ export async function createTeam(body: { name: string }): Promise<Team> {
   return data
 }
 
-export async function switchTeam(body: { team_id: string }): Promise<Team> {
+export async function switchTeam(body: { team_id: number }): Promise<Team> {
   const { data } = await http.post<Team>('/teams/switch', body)
   return data
 }
 
 export async function updateTeam(
-  teamId: string,
+  teamId: number,
   body: { name: string }
 ): Promise<Team> {
   const { data } = await http.put<Team>(`/teams/${teamId}`, body)
@@ -36,9 +36,9 @@ export async function updateTeam(
 }
 
 export type TeamMember = {
-  id: string
-  team_id: string
-  user_id: string
+  id: number
+  team_id: number
+  user_id: number
   name: string
   email: string
   role: string
@@ -56,7 +56,7 @@ export type MembersResponse = {
 }
 
 export async function getTeamMembers(
-  teamId: string,
+  teamId: number,
   params?: {
     page?: number
     per_page?: number
@@ -72,8 +72,8 @@ export async function getTeamMembers(
 }
 
 export async function removeTeamMember(
-  teamId: string,
-  userId: string
+  teamId: number,
+  userId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/teams/${teamId}/members/${userId}`
@@ -82,20 +82,20 @@ export async function removeTeamMember(
 }
 
 export async function assignMemberRole(
-  teamId: string,
-  userId: string,
+  teamId: number,
+  userId: number,
   role: string
 ): Promise<{
-  id: string
-  team_id: string
-  user_id: string
+  id: number
+  team_id: number
+  user_id: number
   role: string
   created_at: string
 }> {
   const { data } = await http.put<{
-    id: string
-    team_id: string
-    user_id: string
+    id: number
+    team_id: number
+    user_id: number
     role: string
     created_at: string
   }>(`/teams/${teamId}/members/${userId}/role`, { role })
@@ -103,9 +103,9 @@ export async function assignMemberRole(
 }
 
 export type TeamRole = {
-  id: string
+  id: number
   role_name: string
-  team_id: string
+  team_id: number
   is_default: boolean
   description: string
   created_at: string
@@ -118,7 +118,7 @@ export type TeamRoleWithPermissions = {
 }
 
 export async function getTeamRoles(
-  teamId: string
+  teamId: number
 ): Promise<{ roles: TeamRoleWithPermissions[] }> {
   const { data } = await http.get<{ roles: TeamRoleWithPermissions[] }>(
     `/teams/${teamId}/roles`
@@ -127,7 +127,7 @@ export async function getTeamRoles(
 }
 
 export async function createTeamRole(
-  teamId: string,
+  teamId: number,
   body: {
     name: string
     description?: string
@@ -139,8 +139,8 @@ export async function createTeamRole(
 }
 
 export async function updateTeamRole(
-  teamId: string,
-  roleId: string,
+  teamId: number,
+  roleId: number,
   body: {
     name?: string
     description?: string
@@ -155,8 +155,8 @@ export async function updateTeamRole(
 }
 
 export async function deleteTeamRole(
-  teamId: string,
-  roleId: string
+  teamId: number,
+  roleId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/teams/${teamId}/roles/${roleId}`
@@ -165,7 +165,7 @@ export async function deleteTeamRole(
 }
 
 export type Permission = {
-  id: string
+  id: number
   permission_key: string
   description: string
   is_system: boolean
@@ -174,7 +174,7 @@ export type Permission = {
 }
 
 export async function getTeamPermissions(
-  teamId: string
+  teamId: number
 ): Promise<{ permissions: Permission[] }> {
   const { data } = await http.get<{ permissions: Permission[] }>(
     `/teams/${teamId}/permissions`
@@ -183,14 +183,14 @@ export async function getTeamPermissions(
 }
 
 export async function inviteTeamMember(
-  teamId: string,
+  teamId: number,
   body: {
     email: string
     role?: string
   }
-): Promise<{ invitation_id: string; message: string }> {
+): Promise<{ invitation_id: number; message: string }> {
   const { data } = await http.post<{
-    invitation_id: string
+    invitation_id: number
     message: string
   }>(`/teams/${teamId}/invite`, body)
   return data
@@ -207,7 +207,7 @@ export const invoicesQueryKey = ['teams', 'plans', 'invoices'] as const
 export const ledgerQueryKey = ['teams', 'plans', 'ledger'] as const
 
 export type PlanFeature = {
-  id: string
+  id: number
   feature_key: string
   value_type: string
   value_bool: boolean
@@ -219,7 +219,7 @@ export type PlanFeature = {
 }
 
 export type PlanMetric = {
-  id: string
+  id: number
   metric_key: string
   included_amount: number
   unlimited: boolean
@@ -233,7 +233,7 @@ export type PlanMetric = {
 }
 
 export type Plan = {
-  id: string
+  id: number
   code: string
   name: string
   description: string
@@ -261,9 +261,9 @@ export type PlanUsage = {
 }
 
 export type SubscriptionAddon = {
-  id: string
-  subscription_id: string
-  addon_id: string
+  id: number
+  subscription_id: number
+  addon_id: number
   quantity: number
   added_at: string
   current_period_start: string
@@ -271,10 +271,10 @@ export type SubscriptionAddon = {
 }
 
 export type Subscription = {
-  id: string
+  id: number
   owner_type: string
-  owner_id: string
-  plan_id: string
+  owner_id: number
+  plan_id: number
   status: string
   started_at: string
   current_period_start: string
@@ -291,7 +291,7 @@ export type Subscription = {
   auto_recharge_cooldown_seconds: number
   auto_recharge_count: number
   last_auto_recharge_at: string | null
-  scheduled_plan_id: string | null
+  scheduled_plan_id: number | null
   scheduled_change_type: string
   created_at: string
   updated_at: string
@@ -310,7 +310,7 @@ export type SubscriptionResponse = {
 }
 
 export type InvoiceItem = {
-  id: string
+  id: number
   kind: string
   description: string
   quantity: number
@@ -321,9 +321,9 @@ export type InvoiceItem = {
 }
 
 export type Invoice = {
-  id: string
+  id: number
   number: string
-  subscription_id: string
+  subscription_id: number
   status: string
   period_start: string
   period_end: string
@@ -342,13 +342,13 @@ export type Invoice = {
 }
 
 export type LedgerEntry = {
-  id: string
-  subscription_id: string
+  id: number
+  subscription_id: number
   entry_type: string
   amount: number
   balance_after: number
   currency: string
-  reference_id: string
+  reference_id: number
   description: string
   metadata: string
   created_at: string
@@ -365,7 +365,7 @@ export type PaginatedResponse<T> = {
 }
 
 export async function getPlansCatalog(
-  teamId: string
+  teamId: number
 ): Promise<CatalogResponse> {
   const { data } = await http.get<CatalogResponse>(
     `/teams/${teamId}/plans/catalog`
@@ -374,7 +374,7 @@ export async function getPlansCatalog(
 }
 
 export async function getSubscription(
-  teamId: string
+  teamId: number
 ): Promise<SubscriptionResponse> {
   const { data } = await http.get<SubscriptionResponse>(
     `/teams/${teamId}/plans/me`
@@ -383,8 +383,8 @@ export async function getSubscription(
 }
 
 export async function changePlan(
-  teamId: string,
-  body: { plan_id: string; change_type: 'upgrade' | 'downgrade' }
+  teamId: number,
+  body: { plan_id: number; change_type: 'upgrade' | 'downgrade' }
 ): Promise<{ subscription: Subscription }> {
   const { data } = await http.post<{ subscription: Subscription }>(
     `/teams/${teamId}/plans/change`,
@@ -394,7 +394,7 @@ export async function changePlan(
 }
 
 export async function cancelSubscription(
-  teamId: string
+  teamId: number
 ): Promise<{ subscription: Subscription }> {
   const { data } = await http.post<{ subscription: Subscription }>(
     `/teams/${teamId}/plans/cancel`
@@ -403,7 +403,7 @@ export async function cancelSubscription(
 }
 
 export async function getPlanUsage(
-  teamId: string
+  teamId: number
 ): Promise<{ usage: PlanUsage[] }> {
   const { data } = await http.get<{ usage: PlanUsage[] }>(
     `/teams/${teamId}/plans/usage`
@@ -412,7 +412,7 @@ export async function getPlanUsage(
 }
 
 export async function getInvoices(
-  teamId: string,
+  teamId: number,
   params?: { page?: number; per_page?: number; status?: string }
 ): Promise<{
   invoices: Invoice[]
@@ -423,7 +423,7 @@ export async function getInvoices(
 }
 
 export async function getLedger(
-  teamId: string,
+  teamId: number,
   params?: { page?: number; per_page?: number; entry_type?: string }
 ): Promise<{
   ledger: LedgerEntry[]
@@ -434,7 +434,7 @@ export async function getLedger(
 }
 
 export async function updateRecharge(
-  teamId: string,
+  teamId: number,
   body: {
     enabled?: boolean
     min_balance?: number
@@ -451,7 +451,7 @@ export async function updateRecharge(
 }
 
 export async function setNegativeLimit(
-  teamId: string,
+  teamId: number,
   body: { limit: number | null }
 ): Promise<{ subscription: Subscription }> {
   const { data } = await http.put<{ subscription: Subscription }>(
@@ -462,8 +462,8 @@ export async function setNegativeLimit(
 }
 
 export async function attachAddon(
-  teamId: string,
-  addonId: string,
+  teamId: number,
+  addonId: number,
   body: { quantity: number }
 ): Promise<{ addon: SubscriptionAddon }> {
   const { data } = await http.post<{ addon: SubscriptionAddon }>(
@@ -474,8 +474,8 @@ export async function attachAddon(
 }
 
 export async function updateAddonQuantity(
-  teamId: string,
-  addonId: string,
+  teamId: number,
+  addonId: number,
   body: { quantity: number }
 ): Promise<{ message: string }> {
   const { data } = await http.put<{ message: string }>(
@@ -486,8 +486,8 @@ export async function updateAddonQuantity(
 }
 
 export async function detachAddon(
-  teamId: string,
-  addonId: string
+  teamId: number,
+  addonId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/teams/${teamId}/plans/addons/${addonId}`

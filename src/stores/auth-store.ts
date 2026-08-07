@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 export interface AuthUser {
-  id: string
+  id: number
   name: string
   email: string
   two_factor_enabled: boolean

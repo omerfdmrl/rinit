@@ -2,13 +2,13 @@ import { http } from '@/lib/http'
 
 export const adminRolesQueryKey = ['admin', 'roles'] as const
 export const adminPermissionsQueryKey = ['admin', 'permissions'] as const
-export const adminRolePermissionsQueryKey = (roleId: string) =>
+export const adminRolePermissionsQueryKey = (roleId: number) =>
   ['admin', 'roles', roleId, 'permissions'] as const
 
 export type AdminRole = {
-  id: string
+  id: number
   role_name: string
-  team_id: string | null
+  team_id: number | null
   is_default: boolean
   description: string
   created_at: string
@@ -16,7 +16,7 @@ export type AdminRole = {
 }
 
 export type AdminPermission = {
-  id: string
+  id: number
   permission_key: string
   description: string
   is_system: boolean
@@ -73,7 +73,7 @@ export async function getAdminRoles(
 export type AdminRoleCreateBody = {
   name: string
   description?: string
-  team_id?: string
+  team_id?: number
   is_default?: boolean
 }
 
@@ -93,7 +93,7 @@ export type AdminRoleUpdateBody = {
 }
 
 export async function updateAdminRole(
-  roleId: string,
+  roleId: number,
   body: AdminRoleUpdateBody
 ): Promise<{ role: AdminRole; message: string }> {
   const { data } = await http.put<{ role: AdminRole; message: string }>(
@@ -104,7 +104,7 @@ export async function updateAdminRole(
 }
 
 export async function deleteAdminRole(
-  roleId: string
+  roleId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/admin/roles/${roleId}`
@@ -113,7 +113,7 @@ export async function deleteAdminRole(
 }
 
 export async function getRolePermissions(
-  roleId: string
+  roleId: number
 ): Promise<{ role: AdminRole; permissions: AdminPermission[] }> {
   const { data } = await http.get<{
     role: AdminRole
@@ -123,8 +123,8 @@ export async function getRolePermissions(
 }
 
 export async function assignRolePermission(
-  roleId: string,
-  permissionId: string
+  roleId: number,
+  permissionId: number
 ): Promise<{ message: string }> {
   const { data } = await http.post<{ message: string }>(
     `/admin/roles/${roleId}/permissions`,
@@ -134,8 +134,8 @@ export async function assignRolePermission(
 }
 
 export async function removeRolePermission(
-  roleId: string,
-  permissionId: string
+  roleId: number,
+  permissionId: number
 ): Promise<{ message: string }> {
   const { data } = await http.delete<{ message: string }>(
     `/admin/roles/${roleId}/permissions/${permissionId}`
@@ -170,7 +170,7 @@ export async function createAdminPermission(
 }
 
 export async function updateAdminPermission(
-  permissionId: string,
+  permissionId: number,
   body: { description?: string }
 ): Promise<{ permission: AdminPermission; message: string }> {
   const { data } = await http.put<{

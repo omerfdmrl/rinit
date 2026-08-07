@@ -108,7 +108,7 @@ export function useSwitchTeam() {
   })
 }
 
-export function useUpdateTeam(teamId: string) {
+export function useUpdateTeam(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -161,7 +161,7 @@ export function useUpdateTeam(teamId: string) {
 }
 
 export function useTeamMembers(
-  teamId: string,
+  teamId: number,
   params?: { page?: number; per_page?: number; role?: string }
 ) {
   return useQuery({
@@ -171,11 +171,11 @@ export function useTeamMembers(
   })
 }
 
-export function useRemoveTeamMember(teamId: string) {
+export function useRemoveTeamMember(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (userId: string) => removeTeamMember(teamId, userId),
+    mutationFn: (userId: number) => removeTeamMember(teamId, userId),
     onMutate: async (userId) => {
       const queryKey = [...teamMembersQueryKey, teamId]
       await queryClient.cancelQueries({ queryKey })
@@ -208,11 +208,11 @@ export function useRemoveTeamMember(teamId: string) {
   })
 }
 
-export function useAssignMemberRole(teamId: string) {
+export function useAssignMemberRole(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ userId, role }: { userId: string; role: string }) =>
+    mutationFn: ({ userId, role }: { userId: number; role: string }) =>
       assignMemberRole(teamId, userId, role),
     onMutate: async ({ userId, role }) => {
       const queryKey = [...teamMembersQueryKey, teamId]
@@ -248,7 +248,7 @@ export function useAssignMemberRole(teamId: string) {
   })
 }
 
-export function useTeamRoles(teamId: string) {
+export function useTeamRoles(teamId: number) {
   return useQuery({
     queryKey: [...teamRolesQueryKey, teamId],
     queryFn: () => getTeamRoles(teamId),
@@ -256,7 +256,7 @@ export function useTeamRoles(teamId: string) {
   })
 }
 
-export function useCreateTeamRole(teamId: string) {
+export function useCreateTeamRole(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -281,7 +281,7 @@ export function useCreateTeamRole(teamId: string) {
                 ...old.roles,
                 {
                   role: {
-                    id: `pending-${Date.now()}`,
+                    id: Date.now(),
                     role_name: body.name,
                     team_id: teamId,
                     is_default: false,
@@ -314,7 +314,7 @@ export function useCreateTeamRole(teamId: string) {
   })
 }
 
-export function useUpdateTeamRole(teamId: string) {
+export function useUpdateTeamRole(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -322,7 +322,7 @@ export function useUpdateTeamRole(teamId: string) {
       roleId,
       body,
     }: {
-      roleId: string
+      roleId: number
       body: { name?: string; description?: string; permission_keys?: string[] }
     }) => updateTeamRole(teamId, roleId, body),
     onMutate: async ({ roleId, body }) => {
@@ -375,11 +375,11 @@ export function useUpdateTeamRole(teamId: string) {
   })
 }
 
-export function useDeleteTeamRole(teamId: string) {
+export function useDeleteTeamRole(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (roleId: string) => deleteTeamRole(teamId, roleId),
+    mutationFn: (roleId: number) => deleteTeamRole(teamId, roleId),
     onMutate: async (roleId) => {
       const queryKey = [...teamRolesQueryKey, teamId]
       await queryClient.cancelQueries({ queryKey })
@@ -415,7 +415,7 @@ export function useDeleteTeamRole(teamId: string) {
   })
 }
 
-export function useTeamPermissions(teamId: string) {
+export function useTeamPermissions(teamId: number) {
   return useQuery({
     queryKey: [...teamPermissionsQueryKey, teamId],
     queryFn: () => getTeamPermissions(teamId),
@@ -423,7 +423,7 @@ export function useTeamPermissions(teamId: string) {
   })
 }
 
-export function useInviteTeamMember(teamId: string) {
+export function useInviteTeamMember(teamId: number) {
   const queryClient = useQueryClient()
 
   return useMutation({

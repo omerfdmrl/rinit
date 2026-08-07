@@ -11,7 +11,7 @@ function TeamSettingsForm({
   initialName,
   createdAt,
 }: {
-  teamId: string
+  teamId: number
   initialName: string
   createdAt: string
 }) {

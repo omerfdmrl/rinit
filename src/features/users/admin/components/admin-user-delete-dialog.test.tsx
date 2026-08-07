@@ -5,7 +5,7 @@ import { type AdminUser } from '../../api'
 import { AdminUserDeleteDialog } from './admin-user-delete-dialog'
 
 const MOCK_USER: AdminUser = {
-  id: 'user-delete-test',
+  id: 1,
   name: 'John Doe',
   email: 'johndoe@shadcn-admin.com',
   two_factor_enabled: false,

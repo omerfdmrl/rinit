@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 
 export interface Team {
-  id: string
+  id: number
   name: string
-  created_by: string
+  created_by: number
   created_at: string
   updated_at: string
 }

@@ -151,7 +151,7 @@ export function SecuritySessionsForm() {
   })
 
   const sessions = data?.sessions ?? []
-  const currentSessionId = data?.current_session_id ?? ''
+  const currentSessionId = data?.current_session_id ?? 0
   const otherSessionsCount = sessions.filter(
     (s) => s.id !== currentSessionId
   ).length

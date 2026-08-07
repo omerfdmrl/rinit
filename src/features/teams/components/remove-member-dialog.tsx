@@ -6,7 +6,7 @@ import { useRemoveTeamMember } from '../hooks/use-teams'
 type RemoveMemberDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  teamId: string
+  teamId: number
   member: TeamMember | null
 }
 

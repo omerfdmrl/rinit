@@ -64,8 +64,8 @@ export async function disable2FA(body: {
 }
 
 export interface Session {
-  id: string
-  user_id: string
+  id: number
+  user_id: number
   user_agent: string
   ip_address: string
   device_name: string
@@ -78,12 +78,12 @@ export interface Session {
 export async function getSessions() {
   const { data } = await http.get<{
     sessions: Session[]
-    current_session_id: string
+    current_session_id: number
   }>('/sessions/')
   return data
 }
 
-export async function revokeSession(id: string) {
+export async function revokeSession(id: number) {
   const { data } = await http.delete<{ message: string }>(`/sessions/${id}`)
   return data
 }

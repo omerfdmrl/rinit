@@ -5,25 +5,25 @@ import { type AdminTeam, type AdminTeamUser } from '../api'
 import { AdminTeamMembersDialog } from './admin-team-members-dialog'
 
 const MOCK_TEAM: AdminTeam = {
-  id: 'team_uuid',
+  id: 1,
   name: 'My Team',
-  created_by: 'user_uuid',
+  created_by: 1,
   created_at: '2026-01-01T10:30:00Z',
   updated_at: '2026-02-02T10:30:00Z',
 }
 
 const OWNER: AdminTeamUser = {
-  id: 'member-owner',
+  id: 2,
   team_id: MOCK_TEAM.id,
-  user_id: 'user-owner',
+  user_id: 3,
   role: 'owner',
   created_at: '2026-01-01T10:30:00Z',
 }
 
 const MEMBER: AdminTeamUser = {
-  id: 'member-1',
+  id: 4,
   team_id: MOCK_TEAM.id,
-  user_id: 'user-member',
+  user_id: 5,
   role: 'member',
   created_at: '2026-01-15T10:30:00Z',
 }
@@ -31,7 +31,7 @@ const MEMBER: AdminTeamUser = {
 const getTeamUsersMock = vi.fn()
 
 vi.mock('../hooks/use-admin-teams', () => ({
-  useAdminTeamUsers: (teamId: string, params?: { role?: string }) =>
+  useAdminTeamUsers: (teamId: number, params?: { role?: string }) =>
     getTeamUsersMock(teamId, params),
 }))
 
@@ -59,8 +59,12 @@ describe('AdminTeamMembersDialog', () => {
     await expect
       .element(getByText(new RegExp(MOCK_TEAM.name, 'i')))
       .toBeInTheDocument()
-    await expect.element(getByText('user-owner')).toBeInTheDocument()
-    await expect.element(getByText('user-member')).toBeInTheDocument()
+    await expect
+      .element(getByText('3', { exact: true }))
+      .toBeInTheDocument()
+    await expect
+      .element(getByText('5', { exact: true }))
+      .toBeInTheDocument()
     await expect.element(getByText('owner', { exact: true })).toBeInTheDocument()
   })
 

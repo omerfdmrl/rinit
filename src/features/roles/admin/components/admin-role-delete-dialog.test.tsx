@@ -5,7 +5,7 @@ import { type AdminRole } from '../../api'
 import { AdminRoleDeleteDialog } from './admin-role-delete-dialog'
 
 const MOCK_ROLE: AdminRole = {
-  id: 'role-delete-test',
+  id: 1,
   role_name: 'editor',
   team_id: null,
   is_default: false,

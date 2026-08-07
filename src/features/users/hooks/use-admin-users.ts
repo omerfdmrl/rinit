@@ -37,7 +37,7 @@ export function useUpdateAdminUser() {
       userId,
       body,
     }: {
-      userId: string
+      userId: number
       body: AdminUserUpdateBody
     }) => updateAdminUser(userId, body),
     onSuccess: () => {
@@ -50,7 +50,7 @@ export function useDeleteAdminUser() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (userId: string) => deleteAdminUser(userId),
+    mutationFn: (userId: number) => deleteAdminUser(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminUsersQueryKey })
     },
@@ -61,7 +61,7 @@ export function useSendAdminPasswordReset() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (userId: string) => sendAdminPasswordReset(userId),
+    mutationFn: (userId: number) => sendAdminPasswordReset(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminUsersQueryKey })
     },

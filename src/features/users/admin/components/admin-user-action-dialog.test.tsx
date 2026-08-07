@@ -5,7 +5,7 @@ import { type AdminUser } from '../../api'
 import { AdminUserActionDialog } from './admin-user-action-dialog'
 
 const MOCK_USER: AdminUser = {
-  id: 'alex_uuid',
+  id: 1,
   name: 'Alex Smith',
   email: 'alex@smith.com',
   two_factor_enabled: false,
