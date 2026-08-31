@@ -40,6 +40,7 @@ import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTeamsIndexRouteImport } from './routes/_authenticated/admin/teams/index'
 import { Route as AuthenticatedAdminRolesIndexRouteImport } from './routes/_authenticated/admin/roles/index'
+import { Route as AuthenticatedAdminBillingIndexRouteImport } from './routes/_authenticated/admin/billing/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -205,6 +206,12 @@ const AuthenticatedAdminRolesIndexRoute =
     path: '/admin/roles/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminBillingIndexRoute =
+  AuthenticatedAdminBillingIndexRouteImport.update({
+    id: '/admin/billing/',
+    path: '/admin/billing/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -233,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/tasks/': typeof AuthenticatedTasksIndexRoute
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/admin/billing/': typeof AuthenticatedAdminBillingIndexRoute
   '/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
   '/admin/teams/': typeof AuthenticatedAdminTeamsIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -263,6 +271,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/admin/billing': typeof AuthenticatedAdminBillingIndexRoute
   '/admin/roles': typeof AuthenticatedAdminRolesIndexRoute
   '/admin/teams': typeof AuthenticatedAdminTeamsIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
@@ -297,6 +306,7 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/admin/billing/': typeof AuthenticatedAdminBillingIndexRoute
   '/_authenticated/admin/roles/': typeof AuthenticatedAdminRolesIndexRoute
   '/_authenticated/admin/teams/': typeof AuthenticatedAdminTeamsIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/tasks/'
     | '/teams/'
     | '/users/'
+    | '/admin/billing/'
     | '/admin/roles/'
     | '/admin/teams/'
     | '/admin/users/'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/teams'
     | '/users'
+    | '/admin/billing'
     | '/admin/roles'
     | '/admin/teams'
     | '/admin/users'
@@ -393,6 +405,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/teams/'
     | '/_authenticated/users/'
+    | '/_authenticated/admin/billing/'
     | '/_authenticated/admin/roles/'
     | '/_authenticated/admin/teams/'
     | '/_authenticated/admin/users/'
@@ -627,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRolesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/billing/': {
+      id: '/_authenticated/admin/billing/'
+      path: '/admin/billing'
+      fullPath: '/admin/billing/'
+      preLoaderRoute: typeof AuthenticatedAdminBillingIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -686,6 +706,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedAdminBillingIndexRoute: typeof AuthenticatedAdminBillingIndexRoute
   AuthenticatedAdminRolesIndexRoute: typeof AuthenticatedAdminRolesIndexRoute
   AuthenticatedAdminTeamsIndexRoute: typeof AuthenticatedAdminTeamsIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
@@ -702,6 +723,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedAdminBillingIndexRoute: AuthenticatedAdminBillingIndexRoute,
   AuthenticatedAdminRolesIndexRoute: AuthenticatedAdminRolesIndexRoute,
   AuthenticatedAdminTeamsIndexRoute: AuthenticatedAdminTeamsIndexRoute,
   AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,

@@ -7,11 +7,13 @@ import {
   ShieldCheck,
   Users,
   MessagesSquare,
+  CreditCard,
 } from 'lucide-react'
 import { adminRolePermissions } from '@/features/roles/hooks/use-admin-permissions'
 import { adminTeamPermissions } from '@/features/teams/admin/hooks/use-admin-team-permissions'
 import { adminUserPermissions } from '@/features/users/hooks/use-admin-permissions'
 import { type SidebarData } from '../types'
+import { adminBillingPermissions } from '@/features/billing/admin/hooks/use-admin-billing-permissions'
 
 export const sidebarData: SidebarData = {
   navGroups: [
@@ -66,6 +68,12 @@ export const sidebarData: SidebarData = {
           url: '/admin/teams',
           icon: Building2,
           permission: adminTeamPermissions.list,
+        },
+        {
+          title: 'Billing',
+          url: '/admin/billing',
+          icon: CreditCard,
+          permission: adminBillingPermissions.plans.list,
         },
       ],
     },
