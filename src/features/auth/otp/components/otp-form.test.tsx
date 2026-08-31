@@ -85,7 +85,7 @@ describe('OtpForm', () => {
     expect(toastSuccess).toHaveBeenCalledWith(
       'Two-factor authentication verified'
     )
-    await vi.waitFor(() => expect(navigate).toHaveBeenCalledWith({ to: '/' }))
+    await vi.waitFor(() => expect(navigate).toHaveBeenCalledWith({ to: '/app' }))
   })
 
   it('handles verification errors without setting the user', async () => {

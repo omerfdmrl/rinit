@@ -56,7 +56,7 @@ export function TeamPlans() {
           <div>
             <div className='flex items-center gap-2'>
               <Button variant='ghost' size='icon' className='size-8' asChild>
-                <Link to='/teams'>
+                <Link to='/app/teams'>
                   <ArrowLeft className='size-4' />
                 </Link>
               </Button>

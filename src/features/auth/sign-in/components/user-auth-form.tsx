@@ -59,7 +59,7 @@ export function UserAuthForm({
       const res = await login({ email: data.email, password: data.password })
 
       if (res.two_factor_required) {
-        navigate({ to: '/otp' })
+        navigate({ to: '/auth/otp' })
         return
       }
 
@@ -67,7 +67,7 @@ export function UserAuthForm({
       toast.success(res.message)
 
       // Redirect to the stored location or default to dashboard
-      const targetPath = redirectTo || '/'
+      const targetPath = redirectTo || '/app'
       navigate({ to: targetPath, replace: true })
     } catch (error) {
       handleServerError(error)
@@ -107,7 +107,7 @@ export function UserAuthForm({
               </FormControl>
               <FormMessage />
               <Link
-                to='/forgot-password'
+                to='/auth/forgot-password'
                 className='absolute inset-e-0 -top-0.5 text-sm font-medium text-muted-foreground hover:opacity-75'
               >
                 Forgot password?

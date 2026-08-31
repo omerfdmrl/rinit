@@ -6,7 +6,7 @@ type NavVisibilityContext = {
   pathname: string
 }
 
-const ADMIN_PATH = '/admin'
+const ADMIN_PATH = '/app/admin'
 
 function hasPermission(permission: string | undefined, permissions: string[]) {
   return !permission || permissions.includes(permission)

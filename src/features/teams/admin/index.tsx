@@ -8,7 +8,7 @@ import { AdminTeamsPrimaryButtons } from './components/admin-teams-primary-butto
 import { AdminTeamsProvider } from './components/admin-teams-provider'
 import { AdminTeamsTable } from './components/admin-teams-table'
 
-const route = getRouteApi('/_authenticated/admin/teams/')
+const route = getRouteApi('/app/_authenticated/admin/teams/')
 
 export function AdminTeams() {
   const search = route.useSearch()

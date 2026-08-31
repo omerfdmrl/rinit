@@ -50,7 +50,7 @@ export function ProfileDropdown() {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
-              <Link to='/settings/account'>
+              <Link to='/app/settings/account'>
                 Account
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </Link>

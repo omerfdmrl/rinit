@@ -93,7 +93,7 @@ describe('ResetPasswordForm', () => {
       'Password has been reset successfully'
     )
     await vi.waitFor(() =>
-      expect(navigate).toHaveBeenCalledWith({ to: '/sign-in' })
+      expect(navigate).toHaveBeenCalledWith({ to: '/auth/sign-in' })
     )
   })
 })

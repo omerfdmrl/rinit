@@ -71,7 +71,7 @@ export function SignUpForm({
       })
       auth.setUser(res.user)
       toast.success(res.message)
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/app', replace: true })
     } catch (error) {
       handleServerError(error)
     } finally {

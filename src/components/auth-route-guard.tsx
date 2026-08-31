@@ -8,7 +8,7 @@ export function AuthRouteGuard() {
 
   useEffect(() => {
     if (user) {
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/app', replace: true })
     }
   }, [user, navigate])
 

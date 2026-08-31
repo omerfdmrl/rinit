@@ -23,7 +23,7 @@ export function SignIn2() {
               <br className='max-sm:hidden' /> your account. Don't have an
               account?{' '}
               <Link
-                to='/sign-up'
+                to='/auth/sign-up'
                 className='text-nowrap underline underline-offset-4 hover:text-primary'
               >
                 Sign Up

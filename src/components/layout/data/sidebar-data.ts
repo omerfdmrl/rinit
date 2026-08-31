@@ -22,28 +22,28 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/',
+          url: '/app',
           icon: LayoutDashboard,
         },
         {
           title: 'Tasks',
-          url: '/tasks',
+          url: '/app/tasks',
           icon: ListTodo,
         },
         {
           title: 'Apps',
-          url: '/apps',
+          url: '/app/apps',
           icon: Package,
         },
         {
           title: 'Chats',
-          url: '/chats',
+          url: '/app/chats',
           badge: '3',
           icon: MessagesSquare,
         },
         {
           title: 'Users',
-          url: '/users',
+          url: '/app/users',
           icon: Users,
         },
       ],
@@ -53,25 +53,25 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Users',
-          url: '/admin/users',
+          url: '/app/admin/users',
           icon: Shield,
           permission: adminUserPermissions.list,
         },
         {
           title: 'Roles',
-          url: '/admin/roles',
+          url: '/app/admin/roles',
           icon: ShieldCheck,
           permission: adminRolePermissions.list,
         },
         {
           title: 'Teams',
-          url: '/admin/teams',
+          url: '/app/admin/teams',
           icon: Building2,
           permission: adminTeamPermissions.list,
         },
         {
           title: 'Billing',
-          url: '/admin/billing',
+          url: '/app/admin/billing',
           icon: CreditCard,
           permission: adminBillingPermissions.plans.list,
         },

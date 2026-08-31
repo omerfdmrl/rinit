@@ -129,7 +129,7 @@ describe('UserAuthForm', () => {
     await vi.waitFor(() => expect(setUserMock).toHaveBeenCalledWith(sampleUser))
     expect(toastSuccess).toHaveBeenCalledWith('Welcome back!')
     await vi.waitFor(() =>
-      expect(navigate).toHaveBeenCalledWith({ to: '/', replace: true })
+      expect(navigate).toHaveBeenCalledWith({ to: '/app', replace: true })
     )
   })
 
@@ -158,7 +158,7 @@ describe('UserAuthForm', () => {
     await submitCredentials(screen, 'a@b.com', '12345678')
 
     await vi.waitFor(() =>
-      expect(navigate).toHaveBeenCalledWith({ to: '/otp' })
+      expect(navigate).toHaveBeenCalledWith({ to: '/auth/otp' })
     )
     expect(setUserMock).not.toHaveBeenCalled()
   })

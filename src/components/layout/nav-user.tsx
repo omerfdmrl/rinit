@@ -87,14 +87,14 @@ export function NavUser({ user }: NavUserProps) {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                  <Link to='/settings/account'>
+                  <Link to='/app/settings/account'>
                     <BadgeCheck />
                     Account
                   </Link>
                 </DropdownMenuItem>
                 {canManageBilling && (
                   <DropdownMenuItem asChild>
-                    <Link to='/teams/plans'>
+                    <Link to='/app/teams/plans'>
                       <CreditCard />
                       Billing
                     </Link>
@@ -102,7 +102,7 @@ export function NavUser({ user }: NavUserProps) {
                 )}
                 {canManageTeam && (
                   <DropdownMenuItem asChild>
-                    <Link to='/teams'>
+                    <Link to='/app/teams'>
                       <Users />
                       Team
                     </Link>

@@ -111,7 +111,7 @@ describe('SearchProvider and CommandMenu', () => {
 
     await userEvent.click(screen.getByText('Tasks'))
 
-    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/tasks' })
+    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/app/tasks' })
     await expect
       .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
       .not.toBeInTheDocument()
@@ -125,7 +125,7 @@ describe('SearchProvider and CommandMenu', () => {
 
     await userEvent.click(getByRole('option', { name: 'Settings Account' }))
 
-    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/settings/account' })
+    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/app/settings/account' })
     await expect
       .element(getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
       .not.toBeInTheDocument()

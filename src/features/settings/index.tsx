@@ -11,22 +11,22 @@ import { SidebarNav } from './components/sidebar-nav'
 const sidebarNavItems = [
   {
     title: 'Account',
-    href: '/settings/account',
+    href: '/app/settings/account',
     icon: <Wrench size={18} />,
   },
   {
     title: 'Security',
-    href: '/settings/security',
+    href: '/app/settings/security',
     icon: <Shield size={18} />,
   },
   {
     title: 'Appearance',
-    href: '/settings/appearance',
+    href: '/app/settings/appearance',
     icon: <Palette size={18} />,
   },
   {
     title: 'Notifications',
-    href: '/settings/notifications',
+    href: '/app/settings/notifications',
     icon: <Bell size={18} />,
   },
 ]

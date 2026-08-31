@@ -8,7 +8,7 @@ import { AdminUsersPrimaryButtons } from './components/admin-users-primary-butto
 import { AdminUsersProvider } from './components/admin-users-provider'
 import { AdminUsersTable } from './components/admin-users-table'
 
-const route = getRouteApi('/_authenticated/admin/users/')
+const route = getRouteApi('/app/_authenticated/admin/users/')
 
 export function AdminUsers() {
   const search = route.useSearch()

@@ -11,7 +11,7 @@ import { AdminRolesPrimaryButtons } from './components/admin-roles-primary-butto
 import { AdminRolesProvider } from './components/admin-roles-provider'
 import { AdminRolesTable } from './components/admin-roles-table'
 
-const route = getRouteApi('/_authenticated/admin/roles/')
+const route = getRouteApi('/app/_authenticated/admin/roles/')
 
 export function AdminRoles() {
   const search = route.useSearch()

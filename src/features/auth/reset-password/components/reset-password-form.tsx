@@ -37,7 +37,7 @@ export function ResetPasswordForm({
   ...props
 }: React.HTMLAttributes<HTMLFormElement>) {
   const navigate = useNavigate()
-  const { token } = useSearch({ from: '/(auth)/reset-password' })
+  const { token } = useSearch({ from: '/auth/reset-password' })
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,7 +60,7 @@ export function ResetPasswordForm({
         password_confirmation: data.confirmPassword,
       })
       toast.success(res.message)
-      navigate({ to: '/sign-in' })
+      navigate({ to: '/auth/sign-in' })
     } catch (error) {
       handleServerError(error)
     } finally {

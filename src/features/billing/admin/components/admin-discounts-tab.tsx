@@ -4,7 +4,7 @@ import { AdminDiscountsPrimaryButtons } from './admin-discounts-primary-buttons'
 import { AdminDiscountsProvider } from './admin-discounts-provider'
 import { AdminDiscountsTable } from './admin-discounts-table'
 
-const route = getRouteApi('/_authenticated/admin/billing/')
+const route = getRouteApi('/app/_authenticated/admin/billing/')
 
 export function AdminDiscountsTab() {
   const search = route.useSearch()

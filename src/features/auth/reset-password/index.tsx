@@ -28,7 +28,7 @@ export function ResetPassword() {
           <p className='mx-auto px-8 text-center text-sm text-balance text-muted-foreground'>
             Remembered your password?{' '}
             <a
-              href='/sign-in'
+              href='/auth/sign-in'
               className='underline underline-offset-4 hover:text-primary'
             >
               Sign in

@@ -152,7 +152,7 @@ describe('SignUpForm', () => {
       'Account created — your workspace is ready'
     )
     await vi.waitFor(() =>
-      expect(navigate).toHaveBeenCalledWith({ to: '/', replace: true })
+      expect(navigate).toHaveBeenCalledWith({ to: '/app', replace: true })
     )
   })
 

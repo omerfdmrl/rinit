@@ -4,7 +4,7 @@ import { AdminPlansPrimaryButtons } from './admin-plans-primary-buttons'
 import { AdminPlansProvider } from './admin-plans-provider'
 import { AdminPlansTable } from './admin-plans-table'
 
-const route = getRouteApi('/_authenticated/admin/billing/')
+const route = getRouteApi('/app/_authenticated/admin/billing/')
 
 export function AdminPlansTab() {
   const search = route.useSearch()

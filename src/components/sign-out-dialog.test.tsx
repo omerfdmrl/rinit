@@ -52,7 +52,7 @@ describe('SignOutDialog', () => {
     await vi.waitFor(() => expect(logoutMock).toHaveBeenCalledOnce())
     expect(reset).toHaveBeenCalledOnce()
     expect(navigate).toHaveBeenCalledWith({
-      to: '/sign-in',
+      to: '/auth/sign-in',
       search: { redirect: MOCK_HREF },
       replace: true,
     })
@@ -66,7 +66,7 @@ describe('SignOutDialog', () => {
     await vi.waitFor(() => expect(handleServerErrorMock).toHaveBeenCalledOnce())
     expect(reset).toHaveBeenCalledOnce()
     expect(navigate).toHaveBeenCalledWith({
-      to: '/sign-in',
+      to: '/auth/sign-in',
       search: { redirect: MOCK_HREF },
       replace: true,
     })

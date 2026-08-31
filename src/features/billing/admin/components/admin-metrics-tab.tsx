@@ -4,7 +4,7 @@ import { AdminMetricsPrimaryButtons } from './admin-metrics-primary-buttons'
 import { AdminMetricsProvider } from './admin-metrics-provider'
 import { AdminMetricsTable } from './admin-metrics-table'
 
-const route = getRouteApi('/_authenticated/admin/billing/')
+const route = getRouteApi('/app/_authenticated/admin/billing/')
 
 export function AdminMetricsTab() {
   const search = route.useSearch()

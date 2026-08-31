@@ -53,7 +53,7 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
       const res = await verify2fa({ code: data.otp })
       auth.setUser(res.user)
       toast.success(res.message)
-      navigate({ to: '/' })
+      navigate({ to: '/app' })
     } catch (error) {
       handleServerError(error)
     } finally {
